@@ -10,7 +10,18 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import Constants from 'utils/constants.jsx';
 
-export default class AboutBuildModal extends React.Component {
+export default class AboutBuildModal extends React.PureComponent {
+    static defaultProps = {
+        show: false
+    };
+
+    static propTypes = {
+        show: PropTypes.bool.isRequired,
+        onModalDismissed: PropTypes.func.isRequired,
+        config: PropTypes.object.isRequired,
+        license: PropTypes.object.isRequired
+    };
+
     constructor(props) {
         super(props);
         this.doHide = this.doHide.bind(this);
@@ -202,12 +213,3 @@ export default class AboutBuildModal extends React.Component {
         );
     }
 }
-
-AboutBuildModal.defaultProps = {
-    show: false
-};
-
-AboutBuildModal.propTypes = {
-    show: PropTypes.bool.isRequired,
-    onModalDismissed: PropTypes.func.isRequired
-};
