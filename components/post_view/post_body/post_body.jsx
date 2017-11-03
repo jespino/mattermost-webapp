@@ -16,7 +16,7 @@ import DelayedAction from 'utils/delayed_action.jsx';
 import FileAttachmentListContainer from 'components/file_attachment_list';
 import CommentedOnFilesMessage from 'components/post_view/commented_on_files_message';
 import FailedPostOptions from 'components/post_view/failed_post_options';
-import PostBodyAdditionalContent from 'components/post_view/post_body_additional_content.jsx';
+import PostBodyAdditionalContent from 'components/post_view/post_body_additional_content';
 import PostMessageView from 'components/post_view/post_message_view';
 import ReactionListContainer from 'components/post_view/reaction_list';
 
