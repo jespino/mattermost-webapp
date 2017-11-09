@@ -3,7 +3,11 @@
 
 import {browserHistory} from 'react-router/es6';
 
-import BrowserStore from 'stores/browser_store.jsx';
+import * as Selectors from 'selectors/storage';
+import * as Actions from 'actions/storage';
+
+import store from 'stores/redux_store.jsx';
+
 import ErrorStore from 'stores/error_store.jsx';
 
 import claimAccountRoute from 'routes/route_claim.jsx';
@@ -17,14 +21,18 @@ import * as UserAgent from 'utils/user_agent.jsx';
 
 import Root from 'components/root.jsx';
 
+const dispatch = store.dispatch;
+const getState = store.getState;
+
 function preLogin(nextState, replace, callback) {
     // redirect to the mobile landing page if the user hasn't seen it before
-    if (window.mm_config.IosAppDownloadLink && UserAgent.isIosWeb() && !BrowserStore.hasSeenLandingPage()) {
+    const hasSeenLandingPage = Selectors.makeGetItem("__landingPageSeen__", false)(getState());
+    if (window.mm_config.IosAppDownloadLink && UserAgent.isIosWeb() && !hasSeenLandingPage) {
         replace('/get_ios_app');
-        BrowserStore.setLandingPageSeen(true);
-    } else if (window.mm_config.AndroidAppDownloadLink && UserAgent.isAndroidWeb() && !BrowserStore.hasSeenLandingPage()) {
+        dispatch(Actions.setItem('__landingPageSeen__', true));
+    } else if (window.mm_config.AndroidAppDownloadLink && UserAgent.isAndroidWeb() && !hasSeenLandingPage) {
         replace('/get_android_app');
-        BrowserStore.setLandingPageSeen(true);
+        dispatch(Actions.setItem('__landingPageSeen__', true));
     }
 
     callback();

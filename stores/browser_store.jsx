@@ -114,14 +114,6 @@ class BrowserStoreClass {
 
         return this.localStorageSupported;
     }
-
-    hasSeenLandingPage() {
-        return this.getItem('__landingPageSeen__', false);
-    }
-
-    setLandingPageSeen(landingPageSeen) {
-        return this.setItem('__landingPageSeen__', landingPageSeen);
-    }
 }
 
 var BrowserStore = new BrowserStoreClass();
