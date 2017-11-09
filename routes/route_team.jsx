@@ -15,7 +15,8 @@ import {loadStatusesForChannelAndSidebar} from 'actions/status_actions.jsx';
 import {loadNewDMIfNeeded, loadNewGMIfNeeded, loadProfilesForSidebar} from 'actions/user_actions.jsx';
 import {reconnect} from 'actions/websocket_actions.jsx';
 import AppDispatcher from 'dispatcher/app_dispatcher.jsx';
-import BrowserStore from 'stores/browser_store.jsx';
+import * as StorageActions from 'actions/storage';
+import * as StorageSelectors from 'selectors/storage';
 import ChannelStore from 'stores/channel_store.jsx';
 import store from 'stores/redux_store.jsx';
 import TeamStore from 'stores/team_store.jsx';
@@ -110,7 +111,7 @@ function preNeedsTeam(nextState, replace, callback) {
     }
 
     TeamStore.saveMyTeam(team);
-    BrowserStore.setGlobalItem('team', team.id);
+    dispatch(StorageActions.setGlobalItem('team', team.id));
     TeamStore.emitChange();
     GlobalActions.emitCloseRightHandSide();
 
@@ -132,7 +133,7 @@ function preNeedsTeam(nextState, replace, callback) {
 
 function selectLastChannel(nextState, replace, callback) {
     const team = TeamStore.getByName(nextState.params.team);
-    const channelId = BrowserStore.getGlobalItem(team.id);
+    const channelId = StorageSelectors.makeGetGlobalItem(team.id)(getState());
     const channel = ChannelStore.getChannelById(channelId);
 
     let channelName = 'town-square';
