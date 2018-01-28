@@ -24,8 +24,6 @@
 
 /* eslint-disable */
 
-var adapter = require('webrtc-adapter');
-
 // List of sessions
 Janus.sessions = {};
 
@@ -56,7 +54,7 @@ Janus.useDefaultDependencies = function (deps) {
         newWebSocket: function(server, proto) { return new socketCls(server, proto); },
         isArray: function(arr) { return Array.isArray(arr); },
         checkJanusExtension: function() { return document.querySelector('#janus-extension-installed') !== null; },
-        webRTCAdapter: (deps && deps.adapter) || adapter,
+        webRTCAdapter: (deps && deps.adapter) || require('webrtc-adapter'),
         httpAPICall: function(url, options) {
             var fetchOptions = {method: options.verb, cache: 'no-cache'};
             if(options.withCredentials !== undefined) {
@@ -116,7 +114,7 @@ Janus.useOldDependencies = function (deps) {
         newWebSocket: function(server, proto) { return new socketCls(server, proto); },
         isArray: function(arr) { return jq.isArray(arr); },
         checkJanusExtension: function() { return jq('#janus-extension-installed').length > 0; },
-        webRTCAdapter: (deps && deps.adapter) || adapter,
+        webRTCAdapter: (deps && deps.adapter) || require('webrtc-adapter'),
         httpAPICall: function(url, options) {
             var payload = options.body !== undefined ? {
                 contentType: 'application/json',
