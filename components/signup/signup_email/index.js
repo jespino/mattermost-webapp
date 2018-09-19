@@ -2,9 +2,11 @@
 // See LICENSE.txt for license information.
 
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {getConfig} from 'mattermost-redux/selectors/entities/general';
 
 import {getPasswordConfig} from 'utils/utils.jsx';
+import {setGlobalItem} from 'actions/storage';
 
 import SignupEmail from './signup_email.jsx';
 
@@ -27,4 +29,12 @@ function mapStateToProps(state) {
     };
 }
 
-export default connect(mapStateToProps)(SignupEmail);
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            setGlobalItem,
+        }, dispatch),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignupEmail);

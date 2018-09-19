@@ -19,6 +19,7 @@ import {getConfig} from 'mattermost-redux/selectors/entities/general';
 import {getCurrentTeamId} from 'mattermost-redux/selectors/entities/teams';
 import {getCurrentChannelStats} from 'mattermost-redux/selectors/entities/channels';
 
+import {signalLogout} from 'utils/local_storage';
 import {browserHistory} from 'utils/browser_history';
 import {loadChannelsForCurrentUser} from 'actions/channel_actions.jsx';
 import {handleNewPost} from 'actions/post_actions.jsx';
@@ -30,7 +31,6 @@ import * as WebsocketActions from 'actions/websocket_actions.jsx';
 import * as StorageActions from 'actions/storage';
 import * as StorageSelectors from 'selectors/storage';
 import AppDispatcher from 'dispatcher/app_dispatcher.jsx';
-import BrowserStore from 'stores/browser_store.jsx';
 import ChannelStore from 'stores/channel_store.jsx';
 import ErrorStore from 'stores/error_store.jsx';
 import store from 'stores/redux_store.jsx';
@@ -436,7 +436,7 @@ export function emitUserLoggedOutEvent(redirectTo = '/', shouldSignalLogout = tr
     Client4.logout().then(
         () => {
             if (shouldSignalLogout) {
-                BrowserStore.signalLogout();
+                signalLogout();
             }
 
             clientLogout(redirectTo);

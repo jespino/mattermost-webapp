@@ -10,7 +10,6 @@ import FormattedMarkdownMessage from 'components/formatted_markdown_message.jsx'
 
 import * as AdminActions from 'actions/admin_actions.jsx';
 import AnalyticsStore from 'stores/analytics_store.jsx';
-import BrowserStore from 'stores/browser_store.jsx';
 import {StatTypes} from 'utils/constants.jsx';
 import Banner from 'components/admin_console/banner.jsx';
 import LineChart from 'components/analytics/line_chart.jsx';
@@ -26,33 +25,13 @@ const LAST_ANALYTICS_TEAM = 'last_analytics_team';
 
 export default class TeamAnalytics extends React.Component {
     static propTypes = {
-
-        /*
-         * Array of team objects
-         */
         teams: PropTypes.arrayOf(PropTypes.object).isRequired,
-
-        /*
-         * Initial team to load analytics for
-         */
         initialTeam: PropTypes.object,
-
-        /**
-         * The locale of the current user
-          */
         locale: PropTypes.string.isRequired,
-
         actions: PropTypes.shape({
-
-            /*
-             * Function to get teams
-             */
             getTeams: PropTypes.func.isRequired,
-
-            /*
-             * Function to get users in a team
-             */
             getProfilesInTeam: PropTypes.func.isRequired,
+            setGlobalItem: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -123,7 +102,7 @@ export default class TeamAnalytics extends React.Component {
             team,
         });
 
-        BrowserStore.setGlobalItem(LAST_ANALYTICS_TEAM, teamId);
+        this.props.actions.setGlobalItem(LAST_ANALYTICS_TEAM, teamId);
     }
 
     render() {

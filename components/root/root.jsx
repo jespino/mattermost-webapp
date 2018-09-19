@@ -19,7 +19,6 @@ import * as UserAgent from 'utils/user_agent.jsx';
 import {EmojiIndicesByAlias} from 'utils/emoji.jsx';
 import {trackLoadTime} from 'actions/diagnostics_actions.jsx';
 import * as GlobalActions from 'actions/global_actions.jsx';
-import BrowserStore from 'stores/browser_store.jsx';
 import ErrorStore from 'stores/error_store.jsx';
 import LocalizationStore from 'stores/localization_store.jsx';
 import UserStore from 'stores/user_store.jsx';
@@ -52,6 +51,8 @@ import loadCreateTeam from 'bundle-loader?lazy!components/create_team';
 import loadMfa from 'bundle-loader?lazy!components/mfa/mfa_controller';
 import store from 'stores/redux_store.jsx';
 import {getSiteURL} from 'utils/url.jsx';
+
+import * as LocalStorageUtils from 'utils/local_storage.jsx';
 
 const CreateTeam = makeAsyncComponent(loadCreateTeam);
 const ErrorPage = makeAsyncComponent(loadErrorPage);
@@ -104,7 +105,7 @@ export default class Root extends React.Component {
             // when one tab on a browser logs out, it sets __logout__ in localStorage to trigger other tabs to log out
             if (e.originalEvent.key === StoragePrefixes.LOGOUT && e.originalEvent.storageArea === localStorage && e.originalEvent.newValue) {
                 // make sure it isn't this tab that is sending the logout signal (only necessary for IE11)
-                if (BrowserStore.isSignallingLogout(e.originalEvent.newValue)) {
+                if (LocalStorageUtils.isSignallingLogout(e.originalEvent.newValue)) {
                     return;
                 }
 
@@ -114,7 +115,7 @@ export default class Root extends React.Component {
 
             if (e.originalEvent.key === StoragePrefixes.LOGIN && e.originalEvent.storageArea === localStorage && e.originalEvent.newValue) {
                 // make sure it isn't this tab that is sending the logout signal (only necessary for IE11)
-                if (BrowserStore.isSignallingLogin(e.originalEvent.newValue)) {
+                if (LocalStorageUtils.isSignallingLogin(e.originalEvent.newValue)) {
                     return;
                 }
 
@@ -215,12 +216,12 @@ export default class Root extends React.Component {
         const toResetPasswordScreen = this.props.location.pathname === '/reset_password_complete';
 
         // redirect to the mobile landing page if the user hasn't seen it before
-        if (iosDownloadLink && UserAgent.isIosWeb() && !BrowserStore.hasSeenLandingPage() && !toResetPasswordScreen) {
+        if (iosDownloadLink && UserAgent.isIosWeb() && !LocalStorageUtils.hasSeenLandingPage() && !toResetPasswordScreen) {
             this.props.history.push('/get_ios_app');
-            BrowserStore.setLandingPageSeen(true);
-        } else if (androidDownloadLink && UserAgent.isAndroidWeb() && !BrowserStore.hasSeenLandingPage() && !toResetPasswordScreen) {
+            LocalStorageUtils.setLandingPageSeen(true);
+        } else if (androidDownloadLink && UserAgent.isAndroidWeb() && !LocalStorageUtils.hasSeenLandingPage() && !toResetPasswordScreen) {
             this.props.history.push('/get_android_app');
-            BrowserStore.setLandingPageSeen(true);
+            LocalStorageUtils.setLandingPageSeen(true);
         }
     }
 

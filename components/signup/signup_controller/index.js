@@ -2,13 +2,19 @@
 // See LICENSE.txt for license information.
 
 import {connect} from 'react-redux';
+import {bindActionCreators} from 'redux';
 import {getConfig, getLicense} from 'mattermost-redux/selectors/entities/general';
+import {getCurrentUser} from 'mattermost-redux/selectors/entities/users';
+
+import {getGlobalItem} from 'selectors/storage';
+import {removeGlobalItem} from 'actions/storage';
 
 import SignupController from './signup_controller.jsx';
 
 function mapStateToProps(state) {
     const license = getLicense(state);
     const config = getConfig(state);
+    const currentUser = getCurrentUser(state);
 
     const isLicensed = license && license.IsLicensed === 'true';
     const enableOpenServer = config.EnableOpenServer === 'true';
@@ -22,6 +28,15 @@ function mapStateToProps(state) {
     const samlLoginButtonText = config.SamlLoginButtonText;
     const siteName = config.SiteName;
 
+    const params = new URLSearchParams(this.props.location.search || '');
+    const token = params.get('t') || '';
+    const inviteId = params.get('id') || '';
+
+    let usedBefore = false;
+    if (!inviteId && token && !currentUser) {
+        usedBefore = getGlobalItem(state, token);
+    }
+
     return {
         isLicensed,
         enableOpenServer,
@@ -34,7 +49,19 @@ function mapStateToProps(state) {
         enableSAML,
         samlLoginButtonText,
         siteName,
+        currentUser,
+        token,
+        inviteId,
+        usedBefore,
     };
 }
 
-export default connect(mapStateToProps)(SignupController);
+function mapDispatchToProps(dispatch) {
+    return {
+        actions: bindActionCreators({
+            removeGlobalItem,
+        }, dispatch),
+    };
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(SignupController);

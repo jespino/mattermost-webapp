@@ -11,7 +11,6 @@ import {browserHistory} from 'utils/browser_history';
 import * as GlobalActions from 'actions/global_actions.jsx';
 import {addUserToTeamFromInvite, getInviteInfo} from 'actions/team_actions.jsx';
 import {loadMe} from 'actions/user_actions.jsx';
-import BrowserStore from 'stores/browser_store.jsx';
 import UserStore from 'stores/user_store.jsx';
 import logoImage from 'images/logo.png';
 import AnnouncementBar from 'components/announcement_bar';
@@ -22,6 +21,28 @@ import {localizeMessage} from 'utils/utils.jsx';
 import {Constants} from 'utils/constants.jsx';
 
 export default class SignupController extends React.Component {
+    static propTypes = {
+        location: PropTypes.object,
+        isLicensed: PropTypes.bool.isRequired,
+        enableOpenServer: PropTypes.bool.isRequired,
+        noAccounts: PropTypes.bool.isRequired,
+        enableSignUpWithEmail: PropTypes.bool.isRequired,
+        enableSignUpWithGitLab: PropTypes.bool.isRequired,
+        enableSignUpWithGoogle: PropTypes.bool.isRequired,
+        enableSignUpWithOffice365: PropTypes.bool.isRequired,
+        enableLDAP: PropTypes.bool.isRequired,
+        enableSAML: PropTypes.bool.isRequired,
+        samlLoginButtonText: PropTypes.string,
+        siteName: PropTypes.string,
+        currentUser: PropTypes.object,
+        inviteId: PropTypes.string,
+        token: PropTypes.string,
+        usedBefore: PropTypes.bool.isRequired,
+        actions: PropTypes.shape({
+            removeGlobalItem: PropTypes.func.isRequired,
+        }).isRequired,
+    };
+
     constructor(props) {
         super(props);
 
@@ -30,90 +51,69 @@ export default class SignupController extends React.Component {
         let loading = false;
         let serverError = '';
         let noOpenServerError = false;
-        let usedBefore = false;
 
-        if (this.props.location.search) {
-            const params = new URLSearchParams(this.props.location.search);
-            let token = params.get('t');
-            if (token == null) {
-                token = '';
-            }
-            let inviteId = params.get('id');
-            if (inviteId == null) {
-                inviteId = '';
-            }
-
-            if (inviteId) {
-                loading = true;
-            } else if (token && !UserStore.getCurrentUser()) {
-                usedBefore = BrowserStore.getGlobalItem(token);
-            } else if (!inviteId && !this.props.enableOpenServer && !this.props.noAccounts) {
-                noOpenServerError = true;
-                serverError = (
-                    <FormattedMessage
-                        id='signup_user_completed.no_open_server'
-                        defaultMessage='This server does not allow open signups.  Please speak with your Administrator to receive an invitation.'
-                    />
-                );
-            }
+        if (this.props.inviteId) {
+            loading = true;
+        } else if ((!this.props.token || this.props.currentUser) && !this.props.inviteId && !this.props.enableOpenServer && !this.props.noAccounts) {
+            noOpenServerError = true;
+            serverError = (
+                <FormattedMessage
+                    id='signup_user_completed.no_open_server'
+                    defaultMessage='This server does not allow open signups.  Please speak with your Administrator to receive an invitation.'
+                />
+            );
         }
 
         this.state = {
             loading,
             serverError,
             noOpenServerError,
-            usedBefore,
         };
     }
 
     componentDidMount() {
-        BrowserStore.removeGlobalItem('team');
-        if (this.props.location.search) {
-            const params = new URLSearchParams(this.props.location.search);
-            const token = params.get('t') || '';
-            const inviteId = params.get('id') || '';
+        this.props.actions.removeGlobalItem('team');
 
-            const userLoggedIn = UserStore.getCurrentUser() != null;
+        const userLoggedIn = this.props.currentUser != null;
 
-            if ((inviteId || token) && userLoggedIn) {
-                addUserToTeamFromInvite(
-                    token,
-                    inviteId,
-                    (team) => {
-                        loadMe().then(
-                            () => {
-                                browserHistory.push('/' + team.name + `/channels/${Constants.DEFAULT_CHANNEL}`);
-                            }
-                        );
-                    },
-                    this.handleInvalidInvite
-                );
-
-                return;
-            }
-
-            if (inviteId) {
-                getInviteInfo(
-                    inviteId,
-                    (inviteData) => {
-                        if (!inviteData) {
-                            return;
+        if ((this.props.inviteId || this.props.token) && userLoggedIn) {
+            addUserToTeamFromInvite(
+                this.props.token,
+                this.props.inviteId,
+                (team) => {
+                    loadMe().then(
+                        () => {
+                            browserHistory.push('/' + team.name + `/channels/${Constants.DEFAULT_CHANNEL}`);
                         }
+                    );
+                },
+                this.handleInvalidInvite
+            );
 
-                        this.setState({ // eslint-disable-line react/no-did-mount-set-state
-                            serverError: '',
-                            loading: false,
-                        });
-                    },
-                    this.handleInvalidInvite
-                );
+            return;
+        }
 
-                return;
-            }
+        if (this.props.inviteId) {
+            getInviteInfo(
+                this.props.inviteId,
+                (inviteData) => {
+                    if (!inviteData) {
+                        return;
+                    }
 
-            if (userLoggedIn) {
-                GlobalActions.redirectUserToDefaultTeam();
-            }
+                    this.setState({ // eslint-disable-line react/no-did-mount-set-state
+                        serverError: '',
+                        loading: false,
+                    });
+                },
+                this.handleInvalidInvite
+            );
+
+            return;
+        }
+
+        if (userLoggedIn) {
+            GlobalActions.redirectUserToDefaultTeam();
         }
     }
 
@@ -300,7 +300,7 @@ export default class SignupController extends React.Component {
             return (<LoadingScreen/>);
         }
 
-        if (this.state.usedBefore) {
+        if (this.props.usedBefore) {
             return (
                 <div>
                     <FormattedMessage
@@ -321,7 +321,7 @@ export default class SignupController extends React.Component {
         }
 
         let signupControls;
-        if (this.state.noOpenServerError || this.state.usedBefore) {
+        if (this.state.noOpenServerError || this.props.usedBefore) {
             signupControls = null;
         } else {
             signupControls = this.renderSignupControls();
@@ -376,18 +376,3 @@ export default class SignupController extends React.Component {
         );
     }
 }
-
-SignupController.propTypes = {
-    location: PropTypes.object,
-    isLicensed: PropTypes.bool.isRequired,
-    enableOpenServer: PropTypes.bool.isRequired,
-    noAccounts: PropTypes.bool.isRequired,
-    enableSignUpWithEmail: PropTypes.bool.isRequired,
-    enableSignUpWithGitLab: PropTypes.bool.isRequired,
-    enableSignUpWithGoogle: PropTypes.bool.isRequired,
-    enableSignUpWithOffice365: PropTypes.bool.isRequired,
-    enableLDAP: PropTypes.bool.isRequired,
-    enableSAML: PropTypes.bool.isRequired,
-    samlLoginButtonText: PropTypes.string,
-    siteName: PropTypes.string,
-};

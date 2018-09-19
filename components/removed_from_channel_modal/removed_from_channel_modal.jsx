@@ -3,17 +3,23 @@
 
 import $ from 'jquery';
 import React from 'react';
+import PropTypes from 'prop-types';
 import ReactDOM from 'react-dom';
 import {FormattedMessage} from 'react-intl';
 
 import {browserHistory} from 'utils/browser_history';
-import BrowserStore from 'stores/browser_store.jsx';
-import ChannelStore from 'stores/channel_store.jsx';
-import TeamStore from 'stores/team_store.jsx';
-import UserStore from 'stores/user_store.jsx';
 import {Constants} from 'utils/constants.jsx';
 
 export default class RemovedFromChannelModal extends React.Component {
+    static propTypes = {
+        currentTeam: PropTypes.object.isRequired,
+        currentUser: PropTypes.object.isRequired,
+        channelRemovedState: PropTypes.object,
+        actions: PropTypes.shape({
+            removeItem: PropTypes.func.isRequired,
+        }).isRequired,
+    };
+
     constructor(props) {
         super(props);
 
@@ -28,15 +34,14 @@ export default class RemovedFromChannelModal extends React.Component {
 
     handleShow() {
         var newState = {};
-        if (BrowserStore.getItem('channel-removed-state')) {
-            newState = BrowserStore.getItem('channel-removed-state');
-            BrowserStore.removeItem('channel-removed-state');
+        if (this.props.channelRemovedState) {
+            newState = this.props.channelRemovedState;
+            this.props.actions.removeItem('channel-removed-state');
         }
 
-        var townSquare = ChannelStore.getByName(Constants.DEFAULT_CHANNEL);
         setTimeout(
             () => {
-                browserHistory.push(TeamStore.getCurrentTeamRelativeUrl() + '/channels/' + townSquare.name);
+                browserHistory.push('/' + this.props.currentTeam.name + '/channels/' + Constants.DEFAULT_CHANNEL);
             },
             1
         );
@@ -59,8 +64,6 @@ export default class RemovedFromChannelModal extends React.Component {
     }
 
     render() {
-        var currentUser = UserStore.getCurrentUser();
-
         var channelName = (
             <FormattedMessage
                 id='removed_channel.channelName'
@@ -81,7 +84,7 @@ export default class RemovedFromChannelModal extends React.Component {
             remover = this.state.remover;
         }
 
-        if (currentUser != null) {
+        if (this.props.currentUser != null) {
             return (
                 <div
                     className='modal fade'
