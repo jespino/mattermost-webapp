@@ -27,6 +27,8 @@ import {loadNewDMIfNeeded, loadNewGMIfNeeded, loadProfilesForSidebar} from 'acti
 import {closeRightHandSide, closeMenu as closeRhsMenu} from 'actions/views/rhs';
 import {close as closeLhs} from 'actions/views/lhs';
 import * as WebsocketActions from 'actions/websocket_actions.jsx';
+import * as StorageActions from 'actions/storage';
+import * as StorageSelectors from 'selectors/storage';
 import AppDispatcher from 'dispatcher/app_dispatcher.jsx';
 import BrowserStore from 'stores/browser_store.jsx';
 import ChannelStore from 'stores/channel_store.jsx';
@@ -72,7 +74,7 @@ export function emitChannelClickEvent(channel) {
         });
 
         if (chan.delete_at === 0) {
-            BrowserStore.setGlobalItem(Constants.PREV_CHANNEL_KEY + teamId, chan.name);
+            dispatch(StorageActions.setGlobalItem(Constants.PREV_CHANNEL_KEY + teamId, chan.name));
         }
 
         loadProfilesForSidebar();
@@ -447,7 +449,7 @@ export function emitUserLoggedOutEvent(redirectTo = '/', shouldSignalLogout = tr
 }
 
 export function clientLogout(redirectTo = '/') {
-    BrowserStore.clear({exclude: [Constants.RECENT_EMOJI_KEY, 'selected_teams']});
+    dispatch(StorageActions.clear({exclude: [Constants.RECENT_EMOJI_KEY, 'selected_teams']}));
     ErrorStore.clearLastError();
     ChannelStore.clear();
     stopPeriodicStatusUpdates();
@@ -472,7 +474,7 @@ export function emitBrowserFocus(focus) {
 export async function redirectUserToDefaultTeam() {
     const teams = TeamStore.getAll();
     const teamMembers = TeamStore.getMyTeamMembers();
-    let teamId = BrowserStore.getGlobalItem('team');
+    let teamId = StorageSelectors.makeGetGlobalItem('team', null)(getState());
 
     function redirect(teamName, channelName) {
         browserHistory.push(`/${teamName}/channels/${channelName}`);
@@ -497,7 +499,7 @@ export async function redirectUserToDefaultTeam() {
 
     const team = teams[teamId];
     if (team) {
-        let channelName = BrowserStore.getGlobalItem(Constants.PREV_CHANNEL_KEY + teamId, Constants.DEFAULT_CHANNEL);
+        let channelName = StorageSelectors.makeGetGlobalItem(Constants.PREV_CHANNEL_KEY + teamId, Constants.DEFAULT_CHANNEL)(getState());
         const channel = ChannelStore.getChannelNamesMap()[channelName];
         if (channel && channel.team_id === team.id) {
             dispatch(selectChannel(channel.id));

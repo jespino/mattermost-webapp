@@ -6,12 +6,13 @@ import EventEmitter from 'events';
 import * as Selectors from 'mattermost-redux/selectors/entities/posts';
 import {PostTypes} from 'mattermost-redux/action_types';
 
-import BrowserStore from 'stores/browser_store.jsx';
 import ChannelStore from 'stores/channel_store.jsx';
 import store from 'stores/redux_store.jsx';
 import UserStore from 'stores/user_store.jsx';
 import {Constants} from 'utils/constants.jsx';
 import AppDispatcher from '../dispatcher/app_dispatcher.jsx';
+import * as StorageSelectors from 'selectors/storage';
+import * as StorageActions from 'actions/storage';
 
 const ActionTypes = Constants.ActionTypes;
 
@@ -127,7 +128,7 @@ class PostStoreClass extends EventEmitter {
 
     storeCurrentDraft(draft) {
         var channelId = ChannelStore.getCurrentId();
-        BrowserStore.setGlobalItem('draft_' + channelId, draft);
+        dispatch(StorageActions.setGlobalItem('draft_' + channelId, draft));
     }
 
     getCurrentDraft() {
@@ -136,21 +137,23 @@ class PostStoreClass extends EventEmitter {
     }
 
     storeDraft(channelId, draft) {
-        BrowserStore.setGlobalItem('draft_' + channelId, draft);
+        dispatch(StorageActions.setGlobalItem('draft_' + channelId, draft));
     }
 
     getDraft(channelId) {
         // deep clone because many components need to modify the draft
-        return JSON.parse(JSON.stringify(this.normalizeDraft(BrowserStore.getGlobalItem('draft_' + channelId))));
+        const draft = StorageSelectors.makeGetGlobalItem('draft_' + channelId, null)(getState());
+        return JSON.parse(JSON.stringify(this.normalizeDraft(draft)));
     }
 
     storeCommentDraft(parentPostId, draft) {
-        BrowserStore.setGlobalItem('comment_draft_' + parentPostId, draft);
+        dispatch(StorageActions.setGlobalItem('comment_draft_' + parentPostId, draft));
     }
 
     getCommentDraft(parentPostId) {
         // deep clone because many components need to modify the draft
-        return JSON.parse(JSON.stringify(this.normalizeDraft(BrowserStore.getGlobalItem('comment_draft_' + parentPostId))));
+        const draft = StorageSelectors.makeGetGlobalItem('comment_draft_' + parentPostId, null)(getState());
+        return JSON.parse(JSON.stringify(this.normalizeDraft(draft)));
     }
 
     getCommentCount(rootPost) {

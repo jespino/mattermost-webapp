@@ -25,9 +25,9 @@ import {loadChannelsForCurrentUser} from 'actions/channel_actions.jsx';
 import * as GlobalActions from 'actions/global_actions.jsx';
 import {handleNewPost} from 'actions/post_actions.jsx';
 import * as StatusActions from 'actions/status_actions.jsx';
+import * as StorageActions from 'actions/storage';
 import {loadProfilesForSidebar} from 'actions/user_actions.jsx';
 import AppDispatcher from 'dispatcher/app_dispatcher.jsx';
-import BrowserStore from 'stores/browser_store.jsx';
 import ChannelStore from 'stores/channel_store.jsx';
 import ErrorStore from 'stores/error_store.jsx';
 import PreferenceStore from 'stores/preference_store.jsx';
@@ -448,8 +448,8 @@ function handleLeaveTeamEvent(msg) {
 
         // if they are on the team being removed redirect them to default team
         if (TeamStore.getCurrentId() === msg.data.team_id) {
-            BrowserStore.removeGlobalItem('team');
-            BrowserStore.removeGlobalItem(msg.data.team_id);
+            dispatch(StorageActions.removeGlobalItem('team'));
+            dispatch(StorageActions.removeGlobalItem(msg.data.team_id));
 
             if (!global.location.pathname.startsWith('/admin_console')) {
                 GlobalActions.redirectUserToDefaultTeam();
@@ -566,7 +566,7 @@ function handleUserRemovedEvent(msg) {
                 sentState.channelName = ChannelStore.getCurrent().display_name;
                 sentState.remover = UserStore.getProfile(msg.data.remover_id).username;
 
-                BrowserStore.setItem('channel-removed-state', sentState);
+                dispatch(StorageActions.setItem('channel-removed-state', sentState));
                 $('#removed_from_channel').modal('show');
             }
 

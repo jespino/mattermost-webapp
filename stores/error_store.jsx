@@ -3,13 +3,19 @@
 
 import EventEmitter from 'events';
 
-import BrowserStore from 'stores/browser_store.jsx';
+import store from 'stores/redux_store.jsx';
 import Constants from 'utils/constants.jsx';
 import AppDispatcher from '../dispatcher/app_dispatcher.jsx';
+
+import * as StorageSelectors from 'selectors/storage';
+import * as StorageActions from 'actions/storage';
 
 const ActionTypes = Constants.ActionTypes;
 
 const CHANGE_EVENT = 'change';
+
+const dispatch = store.dispatch;
+const getState = store.getState;
 
 class ErrorStoreClass extends EventEmitter {
     constructor() {
@@ -41,15 +47,15 @@ class ErrorStoreClass extends EventEmitter {
     }
 
     getLastError() {
-        return BrowserStore.getGlobalItem('last_error');
+        return StorageSelectors.makeGetGlobalItem('last_error', null)(getState());
     }
 
     storeLastError(error) {
-        BrowserStore.setGlobalItem('last_error', error);
+        dispatch(StorageActions.setGlobalItem('last_error', error));
     }
 
     getConnectionErrorCount() {
-        var count = BrowserStore.getGlobalItem('last_error_conn');
+        var count = StorageSelectors.makeGetGlobalItem('last_error_conn', null)(getState());
 
         if (count == null) {
             return 0;
@@ -59,7 +65,7 @@ class ErrorStoreClass extends EventEmitter {
     }
 
     setConnectionErrorCount(count) {
-        BrowserStore.setGlobalItem('last_error_conn', count);
+        dispatch(StorageActions.setGlobalItem('last_error_conn', count));
     }
 
     clearError(message) {
@@ -78,8 +84,8 @@ class ErrorStoreClass extends EventEmitter {
             return;
         }
 
-        BrowserStore.removeGlobalItem('last_error');
-        BrowserStore.removeGlobalItem('last_error_conn');
+        dispatch(StorageActions.removeGlobalItem('last_error'));
+        dispatch(StorageActions.removeGlobalItem('last_error_conn'));
         if (lastError) {
             this.emitChange();
         }
