@@ -184,11 +184,11 @@ describe('components/post_view/Post', () => {
     test('should render in acceptable time', () => {
         const options = new ReactRouterEnzymeContext();
         var start = new Date();
-        for (let i = 0; i < 100; i++) {
+        for (let i = 0; i < 500; i++) {
             const instance = mountWithIntl(<MemoryRouter><Provider store={store}><Post {...requiredProps} store={store}/></Provider></MemoryRouter>);
             instance.render();
         }
         var end = new Date();
-        expect(end.getTime() - start.getTime()).toBeLessThanOrEqual(30);
+        expect((end.getTime() - start.getTime())/500).toBeLessThanOrEqual(0);
     });
 });
