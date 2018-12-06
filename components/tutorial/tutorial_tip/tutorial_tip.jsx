@@ -9,8 +9,7 @@ import {FormattedMessage} from 'react-intl';
 import {trackEvent} from 'actions/diagnostics_actions.jsx';
 import {savePreference} from 'actions/user_actions.jsx';
 import Constants from 'utils/constants.jsx';
-import tutorialGif from 'images/tutorialTip.gif';
-import tutorialGifWhite from 'images/tutorialTipWhite.gif';
+import TutorialTipSvg from 'components/svg/tutorial_tip.jsx';
 
 const Preferences = Constants.Preferences;
 const TutorialSteps = Constants.TutorialSteps;
@@ -139,9 +138,9 @@ export default class TutorialTip extends React.Component {
             }
         }
 
-        var tutorialGifImage = tutorialGif;
+        let tipColor = '#ffffff';
         if (this.props.overlayClass === 'tip-overlay--header' || this.props.overlayClass === 'tip-overlay--sidebar' || this.props.overlayClass === 'tip-overlay--header--up') {
-            tutorialGifImage = tutorialGifWhite;
+            tipColor = '#66b0e5';
         }
 
         return (
@@ -150,11 +149,8 @@ export default class TutorialTip extends React.Component {
                 className={'tip-div ' + this.props.overlayClass}
                 onClick={this.show}
             >
-                <img
-                    className='tip-button'
-                    src={tutorialGifImage}
-                    width='35'
-                    onClick={this.show}
+                <TutorialTipSvg
+                    color={tipColor}
                     ref='target'
                 />
 
