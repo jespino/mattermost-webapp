@@ -28,6 +28,8 @@ import LeaveTeamModal from 'components/leave_team_modal';
 import UserSettingsModal from 'components/user_settings/modal';
 import ToggleModalButtonRedux from 'components/toggle_modal_button_redux';
 
+import KeyBinding from 'components/widgets/key_binding.jsx';
+
 export default class SidebarHeaderDropdown extends React.PureComponent {
     static propTypes = {
         teamId: PropTypes.string,
@@ -162,20 +164,6 @@ export default class SidebarHeaderDropdown extends React.PureComponent {
         this.setState({
             showTeamMembersModal: false,
         });
-    }
-
-    componentDidMount() {
-        document.addEventListener('keydown', this.handleKeyDown);
-    }
-
-    componentWillUnmount() {
-        document.removeEventListener('keydown', this.handleKeyDown);
-    }
-
-    handleKeyDown = (e) => {
-        if (cmdOrCtrlPressed(e) && e.shiftKey && isKeyPressed(e, Constants.KeyCodes.A)) {
-            this.props.actions.openModal({ModalId: ModalIdentifiers.USER_SETTINGS, dialogType: UserSettingsModal});
-        }
     }
 
     showAccountSettingsModal = (e) => {
@@ -690,6 +678,10 @@ export default class SidebarHeaderDropdown extends React.PureComponent {
                     />
                     {addUsersToTeamModal}
                 </Dropdown.Menu>
+                <KeyBinding
+                    filter={(e) => cmdOrCtrlPressed(e) && e.shiftKey && isKeyPressed(e, Constants.KeyCodes.A)}
+                    handler={() => this.props.actions.openModal({ModalId: ModalIdentifiers.USER_SETTINGS, dialogType: UserSettingsModal})}
+                />
             </Dropdown>
         );
     }
