@@ -15,6 +15,8 @@ import store from 'stores/redux_store.jsx';
 import {ActionTypes} from 'utils/constants.jsx';
 import {generateId} from 'utils/utils.jsx';
 
+import AdminDefinition from 'components/admin_console/admin_definition.jsx';
+
 function dispatchPluginComponentAction(name, pluginId, component, id = generateId()) {
     store.dispatch({
         type: ActionTypes.RECEIVED_PLUGIN_COMPONENT,
@@ -307,5 +309,36 @@ export default class PluginRegistry {
         });
 
         return id;
+    }
+
+    registerAdminConsoleSettingsCategory(name, definition) {
+        if (name in AdminDefinition.settings) {
+            return;
+        }
+        AdminDefinition.settings[name] = definition;
+    }
+
+    registerAdminConsoleSettingsMenuItem(category, name, definition) {
+        if (!(category in AdminDefinition.settings)) {
+            return;
+        }
+        if (name in AdminDefinition.settings[category]) {
+            return;
+        }
+        AdminDefinition.settings[category][name] = definition;
+    }
+
+    registerAdminConsoleReportingMenuItem(name, definition) {
+        if (name in AdminDefinition.reporting) {
+            return;
+        }
+        AdminDefinition.reporting[name] = definition;
+    }
+
+    registerAdminConsoleOtherMenuItem(name, definition) {
+        if (name in AdminDefinition.other) {
+            return;
+        }
+        AdminDefinition.other[name] = definition;
     }
 }
