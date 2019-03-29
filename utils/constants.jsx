@@ -125,6 +125,7 @@ export const ActionTypes = keyMirror({
     TOGGLE_LEAVE_PRIVATE_CHANNEL_MODAL: null,
     SHOW_EDIT_POST_MODAL: null,
     HIDE_EDIT_POST_MODAL: null,
+    INVITATION_MODAL: null,
 
     BROWSER_CHANGE_FOCUS: null,
 
