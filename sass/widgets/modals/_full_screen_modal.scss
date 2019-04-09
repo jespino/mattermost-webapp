@@ -11,4 +11,11 @@
     .show {
         display: block;
     }
+    .close-x {
+        position: absolute;
+        top: 50px;
+        right: 50px;
+        font-size: 30px;
+        cursor: pointer;
+    }
 }

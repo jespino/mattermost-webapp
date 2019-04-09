@@ -4,6 +4,8 @@
 import {connect} from 'react-redux';
 import {bindActionCreators} from 'redux';
 
+import {getCurrentTeam} from 'mattermost-redux/selectors/entities/teams';
+
 import {closeModal} from 'actions/views/modals';
 import {isModalOpen} from 'selectors/views/modals';
 import {ModalIdentifiers} from 'utils/constants';
@@ -12,6 +14,7 @@ import InvitationModal from './invitation_modal.jsx';
 
 function mapStateToProps(state) {
     return {
+        currentTeam: getCurrentTeam(state),
         show: isModalOpen(state, ModalIdentifiers.INVITATION),
     };
 }

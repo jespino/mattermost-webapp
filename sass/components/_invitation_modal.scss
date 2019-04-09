@@ -1,0 +1,103 @@
+.InvitationModal {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+    align-items: center;
+    h1 {
+        font-size: 32px;
+        margin-bottom: 20px;
+    }
+    .invitation-modal-option {
+        display: flex;
+        max-width: 700px;
+        border-top: 1px solid $gray;
+        padding: 30px;
+        width: 100%;
+        align-items: center;
+        cursor: pointer;
+        &:last-child {
+            border-bottom: 1px solid $gray;
+        }
+        h2 {
+            margin-top: 0px;
+        }
+        .arrow {
+            margin-left: 20px;
+            font-size: 40px;
+            color: $gray;
+        }
+    }
+    .share-link {
+        max-width: 700px;
+        padding: 30px;
+        width: 100%;
+        .share-link-input-block {
+            display: flex;
+        }
+        .share-link-input {
+            flex-grow: 1;
+            height: 40px;
+            background: $bg--gray;
+            border-top: 1px solid $gray;
+            border-left: 1px solid $gray;
+            border-bottom: 1px solid $gray;
+            border-right: 0;
+            border-radius: 5px 0 0 5px;
+            padding: 10px;
+            color: $dark-gray;
+        }
+        .share-link-input-button {
+            flex-grow: 0;
+            border: 1px solid $primary-color;
+            color: $primary-color;
+            height: 40px;
+            border-radius: 0 5px 5px 0;
+            background: $white;
+            padding: 10px 30px;
+        }
+        .help-text {
+            color: $dark-gray;
+        }
+    }
+    .search-and-add {
+        max-width: 700px;
+        padding: 30px;
+        width: 100%;
+        .search-and-add-input {
+            height: 40px;
+            background: $white;
+            border: 1px solid $gray;
+            border-radius: 5px;
+            padding: 10px;
+            width: 100%;
+        }
+        .help-text {
+            color: $dark-gray;
+        }
+    }
+    .invitation-modal-or {
+        position: relative;
+        max-width: 700px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        hr {
+            max-width: 700px;
+            width: 85%;
+            margin: 24px 0;
+        }
+        div {
+            text-align: center;
+            display: inline-block;
+            position: absolute;
+            background: white;
+            padding: 10px;
+            top: 0;
+            color: $gray;
+            font-size: 20px;
+        }
+    }
+}
