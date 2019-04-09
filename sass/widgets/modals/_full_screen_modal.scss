@@ -13,9 +13,13 @@
     }
     .close-x {
         position: absolute;
-        top: 50px;
-        right: 50px;
-        font-size: 30px;
+        top: 58px;
+        right: 58px;
         cursor: pointer;
+        svg {
+            width: 32px;
+            height: 32px;
+            opacity: .6;
+        }
     }
 }

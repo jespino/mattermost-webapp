@@ -4,11 +4,13 @@
 import PropTypes from 'prop-types';
 import React from 'react';
 
+import CloseIcon from 'components/svg/close_icon';
+
 export default class FullScreenModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool.isRequired,
-        children: PropTypes.node.isRequried,
-        onClose: PropTypes.func.isRequried,
+        children: PropTypes.node.isRequired,
+        onClose: PropTypes.func.isRequired,
     }
 
     close = () => {
@@ -18,8 +20,8 @@ export default class FullScreenModal extends React.Component {
     render() {
         return (
             <div className={'FullScreenModal' + (this.props.show ? ' show' : '')}>
-                <i
-                    className='fa fa-close close-x'
+                <CloseIcon
+                    className='close-x'
                     onClick={this.close}
                 />
                 {this.props.children}
