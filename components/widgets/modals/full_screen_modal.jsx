@@ -11,20 +11,13 @@ export default class FullScreenModal extends React.Component {
         onClose: PropTypes.func.isRequried,
     }
 
-    static defaultProps = {
-        show: true,
-    }
-
     close = () => {
         this.props.onClose();
     }
 
     render() {
         return (
-            <div
-                className='FullScreenModal'
-                show={this.props.show}
-            >
+            <div className={'FullScreenModal' + (this.props.show ? ' show' : '')}>
                 <i
                     className='fa fa-close close-x'
                     onClick={this.close}

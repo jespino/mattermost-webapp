@@ -6,20 +6,20 @@ import {bindActionCreators} from 'redux';
 
 import {closeModal} from 'actions/views/modals';
 import {isModalOpen} from 'selectors/views/modals';
-import Constants from 'utils/constants';
+import {ModalIdentifiers} from 'utils/constants';
 
 import InvitationModal from './invitation_modal.jsx';
 
 function mapStateToProps(state) {
     return {
-        show: isModalOpen(state, Constants.INVITATION_MODAL),
+        show: isModalOpen(state, ModalIdentifiers.INVITATION),
     };
 }
 
 function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
-            closeModal: () => closeModal(Constants.INVITATION_MODAL),
+            closeModal: () => closeModal(ModalIdentifiers.INVITATION),
         }, dispatch),
     };
 }

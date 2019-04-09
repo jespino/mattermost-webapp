@@ -10,7 +10,7 @@ import {Constants, ModalIdentifiers} from 'utils/constants.jsx';
 import {cmdOrCtrlPressed, isKeyPressed, localizeMessage} from 'utils/utils';
 import {useSafeUrl} from 'utils/url';
 import * as UserAgent from 'utils/user_agent.jsx';
-import InviteMemberModal from 'components/invite_member_modal';
+import InvitationModal from 'components/invitation_modal';
 
 import TeamPermissionGate from 'components/permissions_gates/team_permission_gate';
 import SystemPermissionGate from 'components/permissions_gates/system_permission_gate';
@@ -22,7 +22,6 @@ import UserSettingsModal from 'components/user_settings/modal';
 import TeamMembersModal from 'components/team_members_modal';
 import TeamSettingsModal from 'components/team_settings_modal';
 import AboutBuildModal from 'components/about_build_modal';
-import AddUsersToTeam from 'components/add_users_to_team';
 
 import Menu from 'components/widgets/menu/menu.jsx';
 import MenuGroup from 'components/widgets/menu/menu_group.jsx';
@@ -173,36 +172,11 @@ export default class MainMenu extends React.PureComponent {
                         teamId={this.props.teamId}
                         permissions={[Permissions.ADD_USER_TO_TEAM]}
                     >
-                        <TeamPermissionGate
-                            teamId={this.props.teamId}
-                            permissions={[Permissions.INVITE_USER]}
-                        >
-                            <MenuItemToggleModalRedux
-                                id='sendEmailInvite'
-                                show={this.props.enableEmailInvitations}
-                                modalId={ModalIdentifiers.EMAIL_INVITE}
-                                dialogType={InviteMemberModal}
-                                text={localizeMessage('navbar_dropdown.inviteMember', 'Send Email Invite')}
-                                icon={this.props.mobile && <i className='fa fa-user-plus'/>}
-                            />
-                        </TeamPermissionGate>
-                        <TeamPermissionGate
-                            teamId={this.props.teamId}
-                            permissions={[Permissions.INVITE_USER]}
-                        >
-                            <MenuItemAction
-                                id='getTeamInviteLink'
-                                show={this.props.teamType === Constants.OPEN_TEAM && this.props.enableUserCreation}
-                                onClick={this.showGetTeamInviteLinkModal}
-                                text={localizeMessage('navbar_dropdown.teamLink', 'Get Team Invite Link')}
-                                icon={this.props.mobile && <i className='fa fa-link'/>}
-                            />
-                        </TeamPermissionGate>
                         <MenuItemToggleModalRedux
-                            id='addUsersToTeam'
-                            modalId={ModalIdentifiers.ADD_USER_TO_TEAM}
-                            dialogType={AddUsersToTeam}
-                            text={localizeMessage('navbar_dropdown.addMemberToTeam', 'Add Members to Team')}
+                            id='invitationModal'
+                            modalId={ModalIdentifiers.INVITATION}
+                            dialogType={InvitationModal}
+                            text={localizeMessage('navbar_dropdown.invitePeople', 'Invite People')}
                             icon={this.props.mobile && <i className='fa fa-user-plus'/>}
                         />
                     </TeamPermissionGate>
