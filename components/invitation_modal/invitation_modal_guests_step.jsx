@@ -9,6 +9,8 @@ import FormattedMarkdownMessage from 'components/formatted_markdown_message';
 import InviteIcon from 'components/svg/invite_icon';
 import CloseCircleIcon from 'components/svg/close_circle_icon';
 
+import EmailsInput from 'components/widgets/inputs/emails_input.jsx';
+
 import BackIcon from 'components/svg/back_icon';
 
 export default class InvitationModalGuestsStep extends React.Component {
@@ -65,11 +67,7 @@ export default class InvitationModalGuestsStep extends React.Component {
                             defaultMessage='Add email address'
                         >
                             {(placeholder) => (
-                                <input
-                                    className='add-people-input'
-                                    type='text'
-                                    placeholder={placeholder}
-                                />
+                                <EmailsInput placeholder={placeholder}/>
                             )}
                         </FormattedMessage>
                     </div>

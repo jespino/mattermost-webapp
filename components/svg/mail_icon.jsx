@@ -4,13 +4,13 @@
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
-export default class CloseIcon extends React.PureComponent {
+export default class MailIcon extends React.PureComponent {
     render() {
         return (
             <span {...this.props}>
                 <FormattedMessage
-                    id='generic_icons.close'
-                    defaultMessage='Close Icon'
+                    id='generic_icons.mail'
+                    defaultMessage='Mail Icon'
                 >
                     {(ariaLabel) => (
                         <svg
@@ -20,7 +20,7 @@ export default class CloseIcon extends React.PureComponent {
                             role='icon'
                             aria-label={ariaLabel}
                         >
-                            <path d='M19,6.41L17.59,5L12,10.59L6.41,5L5,6.41L10.59,12L5,17.59L6.41,19L12,13.41L17.59,19L19,17.59L13.41,12L19,6.41Z'/>
+                            <path d='M20,8L12,13L4,8V6L12,11L20,6M20,4H4C2.89,4 2,4.89 2,6V18A2,2 0 0,0 4,20H20A2,2 0 0,0 22,18V6C22,4.89 21.1,4 20,4Z'/>
                         </svg>
                     )}
                 </FormattedMessage>
