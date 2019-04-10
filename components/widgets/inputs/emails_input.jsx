@@ -11,6 +11,7 @@ import {isEmail} from 'mattermost-redux/utils/helpers';
 
 import FormattedMarkdownMessage from 'components/formatted_markdown_message';
 import MailIcon from 'components/svg/mail_icon';
+import MailPlusIcon from 'components/svg/mail_plus_icon';
 
 export default class EmailsInput extends React.Component {
     static propTypes = {
@@ -31,7 +32,7 @@ export default class EmailsInput extends React.Component {
 
     getCreateLabel = (value) => (
         <React.Fragment>
-            <MailIcon className='mail-plus-icon'/>
+            <MailPlusIcon className='mail-plus-icon'/>
             <FormattedMarkdownMessage
                 key='widgets.emails_input.valid_email'
                 id='widgets.emails_input.valid_email'

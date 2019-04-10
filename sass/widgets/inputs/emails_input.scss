@@ -15,18 +15,33 @@
     .emails-input__menu-list{
         padding: 0px;
     }
+    .emails-input__menu-notice{
+        height: 60px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 4px 4px 0 0;
+    }
     .emails-input__option {
+        height: 60px;
+        padding: 12px;
+        display: flex;
+        align-items: center;
+        border-radius: 4px 4px 0 0;
         .mail-plus-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 12px;
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
             background: $primary-color;
             padding: 3px;
+            margin-right: 8px;
+            display: inline-block;
             svg {
-                width: 18px;
-                height: 18px;
-                stroke: $white;
-                fill: none;
+                width: 24px;
+                height: 24px;
+                fill: $white;
+                margin: 3px;
             }
         }
     }
@@ -47,8 +62,7 @@
             svg {
                 width: 18px;
                 height: 18px;
-                stroke: $white;
-                fill: none;
+                fill: $white;
             }
         }
     }
