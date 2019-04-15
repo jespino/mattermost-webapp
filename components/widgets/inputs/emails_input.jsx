@@ -16,6 +16,7 @@ import MailPlusIcon from 'components/svg/mail_plus_icon';
 export default class EmailsInput extends React.Component {
     static propTypes = {
         placeholder: PropTypes.string,
+        onChange: PropTypes.func,
     }
 
     state = {
@@ -68,11 +69,17 @@ export default class EmailsInput extends React.Component {
         MultiValueLabel: this.MultiValueLabel,
     };
 
+    onChange = (value) => {
+        if (this.props.onChange) {
+            this.props.onChange(value.map((v) => v.value));
+        }
+    }
+
     render() {
         return (
             <Creatable
                 styles={this.customStyles}
-                selectOption={this.onSelect}
+                onChange={this.onChange}
                 isMulti={true}
                 menuIsOpen={this.state.isMenuOpen}
                 inputValue={this.state.inputValue}

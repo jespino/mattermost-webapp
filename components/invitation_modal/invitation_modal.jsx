@@ -18,8 +18,10 @@ export default class InvitationModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool,
         currentTeam: PropTypes.object.isRequired,
+        invitableChannels: PropTypes.array.isRequired,
         actions: PropTypes.shape({
             closeModal: PropTypes.func.isRequired,
+            sendGuestInvites: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -69,6 +71,9 @@ export default class InvitationModal extends React.Component {
                     {this.state.step === STEPS_INVITE_GUESTS &&
                         <InvitationModalGuestsStep
                             goBack={this.goToInitialStep}
+                            currentTeamId={this.props.currentTeam.id}
+                            myInvitableChannels={this.props.invitableChannels}
+                            sendGuestInvites={this.props.actions.sendGuestInvites}
                         />
                     }
                 </div>

@@ -10,12 +10,16 @@ import InviteIcon from 'components/svg/invite_icon';
 import CloseCircleIcon from 'components/svg/close_circle_icon';
 
 import EmailsInput from 'components/widgets/inputs/emails_input.jsx';
+import ChannelsInput from 'components/widgets/inputs/channels_input.jsx';
 
 import BackIcon from 'components/svg/back_icon';
 
 export default class InvitationModalGuestsStep extends React.Component {
     static propTypes = {
         goBack: PropTypes.func.isRequired,
+        myInvitableChannels: PropTypes.array.isRequired,
+        currentTeamId: PropTypes.string.isRequired,
+        sendGuestInvites: PropTypes.func.isRequired,
     }
 
     constructor(props) {
@@ -23,7 +27,26 @@ export default class InvitationModalGuestsStep extends React.Component {
         this.state = {
             customMessageOpen: false,
             customMessage: '',
+            emails: [],
+            channels: [],
         };
+    }
+
+    onEmailsChange = (emails) => {
+        this.setState({emails});
+    }
+
+    onChannelsChange = (channels) => {
+        this.setState({channels});
+    }
+
+    channelsLoader = async (value) => {
+        if (!value) {
+            return this.props.myInvitableChannels;
+        }
+        return this.props.myInvitableChannels.filter((channel) => {
+            return channel.display_name.toLowerCase().indexOf(value.toLowerCase()) === 0;
+        });
     }
 
     openCustomMessage = () => {
@@ -36,6 +59,15 @@ export default class InvitationModalGuestsStep extends React.Component {
 
     onMessageChange = (e) => {
         this.setState({customMessage: e.target.value});
+    }
+
+    sendInvites = () => {
+        const invitesRequest = {
+            emails: this.state.emails,
+            channels: this.state.channels,
+            customMessage: this.state.customMessageOpen ? this.state.customMessage : '',
+        };
+        this.props.sendGuestInvites(invitesRequest);
     }
 
     render() {
@@ -67,7 +99,10 @@ export default class InvitationModalGuestsStep extends React.Component {
                             defaultMessage='Add email address'
                         >
                             {(placeholder) => (
-                                <EmailsInput placeholder={placeholder}/>
+                                <EmailsInput
+                                    placeholder={placeholder}
+                                    onChange={this.onEmailsChange}
+                                />
                             )}
                         </FormattedMessage>
                     </div>
@@ -91,10 +126,10 @@ export default class InvitationModalGuestsStep extends React.Component {
                             defaultMessage='Search and add Channels'
                         >
                             {(placeholder) => (
-                                <input
-                                    className='add-channels-input'
-                                    type='text'
+                                <ChannelsInput
                                     placeholder={placeholder}
+                                    channelsLoader={this.channelsLoader}
+                                    onChange={this.onChannelsChange}
                                 />
                             )}
                         </FormattedMessage>
@@ -139,7 +174,11 @@ export default class InvitationModalGuestsStep extends React.Component {
                     </div>
                 </div>
                 <div className='invite-guests'>
-                    <button className='btn btn-primary'>
+                    <button
+                        className='btn btn-primary'
+                        disabled={this.state.channels.length === 0 || this.state.emails.length === 0}
+                        onClick={this.sendInvites}
+                    >
                         <FormattedMessage
                             id='invitation_modal.guests.invite_button'
                             defaultMessage='Invite Guests'
