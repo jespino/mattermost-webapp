@@ -7,6 +7,8 @@ import {bindActionCreators} from 'redux';
 import {getCurrentTeam} from 'mattermost-redux/selectors/entities/teams';
 import {getMyChannels} from 'mattermost-redux/selectors/entities/channels';
 import {haveIChannelPermission} from 'mattermost-redux/selectors/entities/roles';
+import {sendEmailInviteGuestsToChannels} from 'mattermost-redux/actions/teams';
+import {Permissions} from 'mattermost-redux/constants';
 
 import {closeModal} from 'actions/views/modals';
 import {isModalOpen} from 'selectors/views/modals';
@@ -21,8 +23,10 @@ function mapStateToProps(state) {
         if (channel.type === Constants.DM_CHANNEL || channel.type === Constants.GM_CHANNEL) {
             return false;
         }
-        // TODO Use mattermost-redux constant (PERMISSION_INVITE_GUEST)
-        return haveIChannelPermission(state, {channel: channel.id, team: currentTeam.id, permission: 'invite_guest'});
+        if (channel.type === Constants.PRIVATE_CHANNEL) {
+            return haveIChannelPermission(state, {channel: channel.id, team: currentTeam.id, permission: Permissions.MANAGE_PRIVATE_CHANNEL_MEMBERS});
+        }
+        return haveIChannelPermission(state, {channel: channel.id, team: currentTeam.id, permission: Permissions.MANAGE_PUBLIC_CHANNEL_MEMBERS});
     });
     return {
         invitableChannels,
@@ -35,8 +39,7 @@ function mapDispatchToProps(dispatch) {
     return {
         actions: bindActionCreators({
             closeModal: () => closeModal(ModalIdentifiers.INVITATION),
-            // TODO: Replace it with the proper solution
-            sendGuestInvites: (inviteData) => { return () => {console.log(inviteData)}; }
+            sendGuestInvites: sendEmailInviteGuestsToChannels,
         }, dispatch),
     };
 }

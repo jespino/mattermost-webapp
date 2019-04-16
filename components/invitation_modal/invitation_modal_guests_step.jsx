@@ -62,12 +62,12 @@ export default class InvitationModalGuestsStep extends React.Component {
     }
 
     sendInvites = () => {
-        const invitesRequest = {
-            emails: this.state.emails,
-            channels: this.state.channels,
-            customMessage: this.state.customMessageOpen ? this.state.customMessage : '',
-        };
-        this.props.sendGuestInvites(invitesRequest);
+        this.props.sendGuestInvites(
+            this.props.currentTeamId,
+            this.state.channels,
+            this.state.emails,
+            this.state.customMessageOpen ? this.state.customMessage : '',
+        );
     }
 
     render() {
