@@ -2,6 +2,7 @@
 // See LICENSE.txt for license information.
 
 import React from 'react';
+
 import reducerRegistry from 'mattermost-redux/store/reducer_registry';
 
 import {
@@ -19,6 +20,16 @@ import store from 'stores/redux_store.jsx';
 import {ActionTypes} from 'utils/constants.jsx';
 import {generateId} from 'utils/utils.jsx';
 
+import PluginErrorBoundary from './plugin_error_boundary.jsx';
+
+function addErrorBoundary(Component) {
+    return (props) => (
+        <PluginErrorBoundary>
+            <Component {...props}/>
+        </PluginErrorBoundary>
+    );
+}
+
 function dispatchPluginComponentAction(name, pluginId, component, id = generateId()) {
     store.dispatch({
         type: ActionTypes.RECEIVED_PLUGIN_COMPONENT,
@@ -26,7 +37,7 @@ function dispatchPluginComponentAction(name, pluginId, component, id = generateI
         data: {
             id,
             pluginId,
-            component,
+            component: addErrorBoundary(component),
         },
     });
 
@@ -137,7 +148,7 @@ export default class PluginRegistry {
                 id,
                 pluginId: this.id,
                 type,
-                component,
+                component: addErrorBoundary(component),
             },
         });
 
@@ -367,7 +378,7 @@ export default class PluginRegistry {
                 id,
                 pluginId: this.id,
                 override,
-                component,
+                component: addErrorBoundary(component),
             },
         });
 
