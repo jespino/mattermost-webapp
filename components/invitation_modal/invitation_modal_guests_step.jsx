@@ -161,9 +161,8 @@ export default class InvitationModalGuestsStep extends React.Component {
                             </div>
                             <textarea
                                 onChange={this.onMessageChange}
-                            >
-                                {this.state.customMessage}
-                            </textarea>
+                                value={this.state.customMessage}
+                            />
                         </React.Fragment>
                     }
                     <div className='help-text'>
