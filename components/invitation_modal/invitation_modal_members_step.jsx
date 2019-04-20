@@ -7,6 +7,7 @@ import {FormattedMessage} from 'react-intl';
 
 import FormattedMarkdownMessage from 'components/formatted_markdown_message';
 import InviteIcon from 'components/svg/invite_icon';
+import UsersEmailsInput from 'components/widgets/inputs/users_emails_input.jsx';
 
 import BackIcon from 'components/svg/back_icon';
 
@@ -86,10 +87,10 @@ export default class InvitationModalMembersStep extends React.Component {
                             defaultMessage='Add members or email addresses'
                         >
                             {(placeholder) => (
-                                <input
-                                    className='search-and-add-input'
-                                    type='text'
+                                <UsersEmailsInput
+                                    usersLoader={() => []}
                                     placeholder={placeholder}
+                                    onChange={() => []}
                                 />
                             )}
                         </FormattedMessage>
