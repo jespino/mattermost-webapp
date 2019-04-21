@@ -8,6 +8,7 @@ import {getCurrentTeam} from 'mattermost-redux/selectors/entities/teams';
 import {getMyChannels} from 'mattermost-redux/selectors/entities/channels';
 import {haveIChannelPermission} from 'mattermost-redux/selectors/entities/roles';
 import {sendEmailInviteGuestsToChannels} from 'mattermost-redux/actions/teams';
+import {autocompleteUsers} from 'mattermost-redux/actions/users';
 import {Permissions} from 'mattermost-redux/constants';
 
 import {closeModal} from 'actions/views/modals';
@@ -40,6 +41,7 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators({
             closeModal: () => closeModal(ModalIdentifiers.INVITATION),
             sendGuestInvites: sendEmailInviteGuestsToChannels,
+            autocompleteUsers,
         }, dispatch),
     };
 }

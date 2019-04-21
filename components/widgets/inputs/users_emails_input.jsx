@@ -3,7 +3,7 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
-import AsyncSelect from 'react-select/lib/Async';
+import AsyncSelect from 'react-select/lib/AsyncCreatable';
 import {components} from 'react-select';
 
 import {isEmail} from 'mattermost-redux/utils/helpers';
@@ -25,14 +25,56 @@ export default class UsersEmailsInput extends React.Component {
         inputValue: '',
     }
 
-    getOptionValue = (user) => user.id
-    formatOptionLabel = (user) => {
+    getOptionValue = (user) => {
+        return user.id || user.value;
+    }
+
+    formatUserName = (user) => {
+        let displayName = '@' + user.username + ' - ' + user.first_name + ' ' + user.last_name;
+        if (user.nickname) {
+            displayName = displayName + ' (' + user.nickname + ')';
+        }
+        return displayName;
+    }
+
+    formatShortUserName = (user) => {
+        if (user.first_name || user.last_name) {
+            return user.first_name + ' ' + user.last_name;
+        }
+        return user.username;
+    }
+
+    formatOptionLabel = (user, options) => {
+        if (options.context === 'menu') {
+            if (user.value && isEmail(user.value)) {
+                return this.getCreateLabel(user.value);
+            }
+
+            // TODO Use the user avatar here
+            const avatar = <PublicChannelIcon className='public-channel-icon'/>;
+            return (
+                <React.Fragment>
+                    {avatar}
+                    {this.formatUserName(user)}
+                </React.Fragment>
+            );
+        }
+
+        if (user.value && isEmail(user.value)) {
+            return (
+                <React.Fragment>
+                    <MailIcon className='mail-icon'/>
+                    <span>{user.value}</span>
+                </React.Fragment>
+            );
+        }
+
         // TODO Use the user avatar here
         const avatar = <PublicChannelIcon className='public-channel-icon'/>;
         return (
             <React.Fragment>
                 {avatar}
-                {user.display_name}
+                {this.formatShortUserName(user)}
             </React.Fragment>
         );
     }
@@ -40,6 +82,12 @@ export default class UsersEmailsInput extends React.Component {
     onChange = (value) => {
         if (this.props.onChange) {
             this.props.onChange(value.map((v) => v.id));
+        }
+    }
+
+    onInputChange = (inputValue, action) => {
+        if (action.action !== 'input-blur' && action.action !== 'menu-close') {
+            this.setState({inputValue, error: false, isMenuOpen: Boolean(inputValue)});
         }
     }
 
@@ -69,12 +117,13 @@ export default class UsersEmailsInput extends React.Component {
         </FormattedMarkdownMessage>
     );
 
-    MultiValueLabel = (props) => (
-        <React.Fragment>
-            <MailIcon className='mail-icon'/>
-            <components.MultiValueLabel {...props}/>
-        </React.Fragment>
-    );
+    MultiValueLabel = (props) => {
+        return (
+            <React.Fragment>
+                <components.MultiValueLabel {...props}/>
+            </React.Fragment>
+        );
+    }
 
     components = {
         NoOptionsMessage: this.NoOptionsMessage,
@@ -87,7 +136,7 @@ export default class UsersEmailsInput extends React.Component {
             <AsyncSelect
                 styles={this.customStyles}
                 onChange={this.onChange}
-                loadOptions={this.props.channelsLoader}
+                loadOptions={this.props.usersLoader}
                 isValidNewOption={isEmail}
                 isMulti={true}
                 isClearable={false}
@@ -95,6 +144,7 @@ export default class UsersEmailsInput extends React.Component {
                 classNamePrefix='users-emails-input'
                 placeholder={this.props.placeholder}
                 components={this.components}
+                onInputChange={this.onInputChange}
                 getOptionValue={this.getOptionValue}
                 formatOptionLabel={this.formatOptionLabel}
                 defaultOptions={true}

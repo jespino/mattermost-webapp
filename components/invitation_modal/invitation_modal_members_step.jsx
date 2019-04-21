@@ -17,6 +17,16 @@ export default class InvitationModalMembersStep extends React.Component {
     static propTypes = {
         inviteId: PropTypes.string.isRequired,
         goBack: PropTypes.func.isRequired,
+        autocompleteUsers: PropTypes.func.isRequired,
+    }
+
+    usersLoader = async (term) => {
+        const {data} = await this.props.autocompleteUsers(term);
+        let users = [...data.users];
+        if (data.out_of_channel) {
+            users = [...users, ...data.out_of_channel];
+        }
+        return users;
     }
 
     render() {
@@ -88,7 +98,7 @@ export default class InvitationModalMembersStep extends React.Component {
                         >
                             {(placeholder) => (
                                 <UsersEmailsInput
-                                    usersLoader={() => []}
+                                    usersLoader={this.usersLoader}
                                     placeholder={placeholder}
                                     onChange={() => []}
                                 />
