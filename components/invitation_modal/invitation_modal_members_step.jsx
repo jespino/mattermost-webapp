@@ -17,16 +17,13 @@ export default class InvitationModalMembersStep extends React.Component {
     static propTypes = {
         inviteId: PropTypes.string.isRequired,
         goBack: PropTypes.func.isRequired,
-        autocompleteUsers: PropTypes.func.isRequired,
+        searchProfiles: PropTypes.func.isRequired,
+        currentTeamId: PropTypes.string.isRequired,
     }
 
     usersLoader = async (term) => {
-        const {data} = await this.props.autocompleteUsers(term);
-        let users = [...data.users];
-        if (data.out_of_channel) {
-            users = [...users, ...data.out_of_channel];
-        }
-        return users;
+        const {data} = await this.props.searchProfiles(term, this.props.currentTeamId);
+        return data;
     }
 
     render() {

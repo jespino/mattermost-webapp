@@ -29,19 +29,27 @@
         display: flex;
         align-items: center;
         border-radius: 4px 4px 0 0;
-        .public-channel-icon, .private-channel-icon {
+        .mail-plus-icon {
             width: 36px;
             height: 36px;
             border-radius: 18px;
+            background: $primary-color;
             padding: 3px;
             margin-right: 8px;
             display: inline-block;
             svg {
                 width: 24px;
                 height: 24px;
-                fill: $gray;
+                fill: $white;
                 margin: 3px;
             }
+        }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            display: inline-block;
+            margin-right: 3px;
         }
     }
     .show {
@@ -58,19 +66,23 @@
         display: flex;
         align-items: center;
         padding-left: 0px;
-        .public-channel-icon, .private-channel-icon {
-            display: flex;
+        .mail-icon {
             width: 24px;
             height: 24px;
             border-radius: 16px;
             background: $gray;
-            padding: 4px;
-            margin-right: 3px;
+            padding: 3px;
             svg {
-                width: 16px;
-                height: 16px;
+                width: 18px;
+                height: 18px;
                 fill: $white;
             }
+        }
+        .avatar {
+            border-radius: 16px;
+            width: 24px;
+            height: 24px;
+            margin-right: 3px;
         }
     }
     .users-emails-input__multi-value__remove {

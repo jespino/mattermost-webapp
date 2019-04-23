@@ -22,7 +22,7 @@ export default class InvitationModal extends React.Component {
         actions: PropTypes.shape({
             closeModal: PropTypes.func.isRequired,
             sendGuestInvites: PropTypes.func.isRequired,
-            autocompleteUsers: PropTypes.func.isRequired,
+            searchProfiles: PropTypes.func.isRequired,
         }).isRequired,
     }
 
@@ -67,7 +67,8 @@ export default class InvitationModal extends React.Component {
                         <InvitationModalMembersStep
                             inviteId={this.props.currentTeam.invite_id}
                             goBack={this.goToInitialStep}
-                            autocompleteUsers={this.props.actions.autocompleteUsers}
+                            currentTeamId={this.props.currentTeam.id}
+                            searchProfiles={this.props.actions.searchProfiles}
                         />
                     }
                     {this.state.step === STEPS_INVITE_GUESTS &&

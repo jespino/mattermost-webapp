@@ -8,7 +8,7 @@ import {getCurrentTeam} from 'mattermost-redux/selectors/entities/teams';
 import {getMyChannels} from 'mattermost-redux/selectors/entities/channels';
 import {haveIChannelPermission} from 'mattermost-redux/selectors/entities/roles';
 import {sendEmailInviteGuestsToChannels} from 'mattermost-redux/actions/teams';
-import {autocompleteUsers} from 'mattermost-redux/actions/users';
+import {getProfilesNotInTeam, searchProfiles as reduxSearchProfiles} from 'mattermost-redux/actions/users';
 import {Permissions} from 'mattermost-redux/constants';
 
 import {closeModal} from 'actions/views/modals';
@@ -16,6 +16,13 @@ import {isModalOpen} from 'selectors/views/modals';
 import {ModalIdentifiers, Constants} from 'utils/constants';
 
 import InvitationModal from './invitation_modal.jsx';
+
+const searchProfiles = (term, notInTeamId) => {
+    if (!term) {
+        return getProfilesNotInTeam(notInTeamId, 0, 20);
+    }
+    return reduxSearchProfiles(term, {not_in_team_id: notInTeamId});
+};
 
 function mapStateToProps(state) {
     const channels = getMyChannels(state);
@@ -41,7 +48,7 @@ function mapDispatchToProps(dispatch) {
         actions: bindActionCreators({
             closeModal: () => closeModal(ModalIdentifiers.INVITATION),
             sendGuestInvites: sendEmailInviteGuestsToChannels,
-            autocompleteUsers,
+            searchProfiles,
         }, dispatch),
     };
 }

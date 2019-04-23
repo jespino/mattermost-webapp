@@ -9,9 +9,9 @@ import {components} from 'react-select';
 import {isEmail} from 'mattermost-redux/utils/helpers';
 
 import FormattedMarkdownMessage from 'components/formatted_markdown_message';
-import PublicChannelIcon from 'components/svg/globe_icon.jsx';
 import MailIcon from 'components/svg/mail_icon';
 import MailPlusIcon from 'components/svg/mail_plus_icon';
+import {imageURLForUser} from 'utils/utils.jsx';
 
 export default class UsersEmailsInput extends React.Component {
     static propTypes = {
@@ -23,10 +23,18 @@ export default class UsersEmailsInput extends React.Component {
     state = {
         error: false,
         inputValue: '',
+        isMenuOpen: false,
     }
 
     getOptionValue = (user) => {
         return user.id || user.value;
+    }
+
+    usersLoader = async (term) => {
+        if (isEmail(term)) {
+            return [];
+        }
+        return this.props.usersLoader(term);
     }
 
     formatUserName = (user) => {
@@ -45,13 +53,19 @@ export default class UsersEmailsInput extends React.Component {
     }
 
     formatOptionLabel = (user, options) => {
+        const profileImg = imageURLForUser(user);
+        const avatar = (
+            <img
+                className='avatar'
+                alt={`${user.username || 'user'} profile image`}
+                src={profileImg}
+            />
+        );
+
         if (options.context === 'menu') {
             if (user.value && isEmail(user.value)) {
                 return this.getCreateLabel(user.value);
             }
-
-            // TODO Use the user avatar here
-            const avatar = <PublicChannelIcon className='public-channel-icon'/>;
             return (
                 <React.Fragment>
                     {avatar}
@@ -69,8 +83,6 @@ export default class UsersEmailsInput extends React.Component {
             );
         }
 
-        // TODO Use the user avatar here
-        const avatar = <PublicChannelIcon className='public-channel-icon'/>;
         return (
             <React.Fragment>
                 {avatar}
@@ -103,32 +115,44 @@ export default class UsersEmailsInput extends React.Component {
         </React.Fragment>
     );
 
-    NoOptionsMessage = (props) => (
-        <FormattedMarkdownMessage
-            id='widgets.emails_input.invalid_email'
-            defaultMessage='No one found matching *{text}*, type email to invite'
-            values={{text: this.state.inputValue}}
-        >
-            {(message) => (
-                <components.NoOptionsMessage {...props}>
-                    {message}
-                </components.NoOptionsMessage>
-            )}
-        </FormattedMarkdownMessage>
-    );
-
-    MultiValueLabel = (props) => {
+    NoOptionsMessage = (props) => {
+        if (this.state.inputValue) {
+            return (
+                <div className='users-emails-input__option'>
+                    <FormattedMarkdownMessage
+                        id='widgets.emails_input.no_user_found_matching'
+                        defaultMessage='No one found matching **{text}**, type email to invite'
+                        values={{text: this.state.inputValue}}
+                    >
+                        {(message) => (
+                            <components.NoOptionsMessage {...props}>
+                                {message}
+                            </components.NoOptionsMessage>
+                        )}
+                    </FormattedMarkdownMessage>
+                </div>
+            );
+        }
         return (
-            <React.Fragment>
-                <components.MultiValueLabel {...props}/>
-            </React.Fragment>
+            <div className='users-emails-input__option'>
+                <FormattedMarkdownMessage
+                    id='widgets.emails_input.no_user_found_empty'
+                    defaultMessage='No one found outside this team, type email to invite'
+                    values={{text: this.state.inputValue}}
+                >
+                    {(message) => (
+                        <components.NoOptionsMessage {...props}>
+                            {message}
+                        </components.NoOptionsMessage>
+                    )}
+                </FormattedMarkdownMessage>
+            </div>
         );
-    }
+    };
 
     components = {
         NoOptionsMessage: this.NoOptionsMessage,
         IndicatorsContainer: () => null,
-        MultiValueLabel: this.MultiValueLabel,
     };
 
     render() {
@@ -136,8 +160,9 @@ export default class UsersEmailsInput extends React.Component {
             <AsyncSelect
                 styles={this.customStyles}
                 onChange={this.onChange}
-                loadOptions={this.props.usersLoader}
+                loadOptions={this.usersLoader}
                 isValidNewOption={isEmail}
+                menuIsOpen={true}
                 isMulti={true}
                 isClearable={false}
                 className='UsersEmailsInput'
