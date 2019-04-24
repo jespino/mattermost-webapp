@@ -16,7 +16,6 @@ function mapStateToProps(state) {
     const team = getCurrentTeam(state) || {};
     return {
         currentUserId,
-        teamType: team.type,
         step: getInt(state, Preferences.TUTORIAL_STEP, currentUserId, 0),
     };
 }

@@ -73,11 +73,6 @@ export default class MainMenu extends React.PureComponent {
         GlobalActions.toggleShortcutsModal();
     }
 
-    showGetTeamInviteLinkModal = (e) => {
-        e.preventDefault();
-        GlobalActions.showGetTeamInviteLinkModal();
-    }
-
     componentDidMount() {
         document.addEventListener('keydown', this.handleKeyDown);
     }
