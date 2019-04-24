@@ -55,7 +55,6 @@ export default class ChannelController extends React.Component {
                     <GetPostLinkModal/>
                     <GetPublicLinkModal/>
                     <GetTeamInviteLinkModal/>
-                    <InvitationModal/>
                     <ImportThemeModal/>
                     <EditPostModal/>
                     <ResetStatusModal/>

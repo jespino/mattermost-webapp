@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 
 import CloseIcon from 'components/svg/close_icon';
+import RootPortal from 'components/root_portal';
 
 export default class FullScreenModal extends React.Component {
     static propTypes = {
@@ -19,13 +20,15 @@ export default class FullScreenModal extends React.Component {
 
     render() {
         return (
-            <div className={'FullScreenModal' + (this.props.show ? ' show' : '')}>
-                <CloseIcon
-                    className='close-x'
-                    onClick={this.close}
-                />
-                {this.props.children}
-            </div>
+            <RootPortal>
+                <div className={'FullScreenModal' + (this.props.show ? ' show' : '')}>
+                    <CloseIcon
+                        className='close-x'
+                        onClick={this.close}
+                    />
+                    {this.props.children}
+                </div>
+            </RootPortal>
         );
     }
 }
