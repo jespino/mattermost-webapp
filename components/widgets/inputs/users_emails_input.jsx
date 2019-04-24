@@ -97,12 +97,6 @@ export default class UsersEmailsInput extends React.Component {
         }
     }
 
-    onInputChange = (inputValue, action) => {
-        if (action.action !== 'input-blur' && action.action !== 'menu-close') {
-            this.setState({inputValue, error: false, isMenuOpen: Boolean(inputValue)});
-        }
-    }
-
     getCreateLabel = (value) => (
         <React.Fragment>
             <MailPlusIcon className='mail-plus-icon'/>
@@ -162,14 +156,12 @@ export default class UsersEmailsInput extends React.Component {
                 onChange={this.onChange}
                 loadOptions={this.usersLoader}
                 isValidNewOption={isEmail}
-                menuIsOpen={true}
                 isMulti={true}
                 isClearable={false}
                 className='UsersEmailsInput'
                 classNamePrefix='users-emails-input'
                 placeholder={this.props.placeholder}
                 components={this.components}
-                onInputChange={this.onInputChange}
                 getOptionValue={this.getOptionValue}
                 formatOptionLabel={this.formatOptionLabel}
                 defaultOptions={true}

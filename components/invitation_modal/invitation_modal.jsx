@@ -3,8 +3,10 @@
 
 import PropTypes from 'prop-types';
 import React from 'react';
+import {FormattedMessage} from 'react-intl';
 
 import FullScreenModal from 'components/widgets/modals/full_screen_modal';
+import ConfirmModal from 'components/confirm_modal.jsx';
 
 import InvitationModalInitialStep from './invitation_modal_initial_step.jsx';
 import InvitationModalMembersStep from './invitation_modal_members_step.jsx';
@@ -30,23 +32,42 @@ export default class InvitationModal extends React.Component {
         super(props);
         this.state = {
             step: STEPS_INITIAL,
+            confirmModal: false,
+            hasChanges: false,
         };
     }
 
     goToInitialStep = () => {
-        this.setState({step: STEPS_INITIAL});
+        this.setState({step: STEPS_INITIAL, hasChanges: false});
     }
 
     goToMembers = () => {
-        this.setState({step: STEPS_INVITE_MEMBERS});
+        this.setState({step: STEPS_INVITE_MEMBERS, hasChanges: false});
     }
 
     goToGuests = () => {
-        this.setState({step: STEPS_INVITE_GUESTS});
+        this.setState({step: STEPS_INVITE_GUESTS, hasChanges: false});
     }
 
-    close = () => {
+    onEdit = () => {
+        this.setState({hasChanges: true});
+    }
+
+    close = async () => {
+        if (this.state.hasChanges) {
+            this.setState({confirmModal: true});
+        } else {
+            this.props.actions.closeModal();
+        }
+    }
+
+    confirmClose = () => {
         this.props.actions.closeModal();
+        this.setState({confirmModal: false});
+    }
+
+    cancelConfirm = () => {
+        this.setState({confirmModal: false});
     }
 
     render() {
@@ -56,6 +77,30 @@ export default class InvitationModal extends React.Component {
                 onClose={this.close}
             >
                 <div className='InvitationModal'>
+                    <ConfirmModal
+                        show={this.state.confirmModal}
+                        title={
+                            <FormattedMessage
+                                id='invitation-modal.discard-changes.title'
+                                defaultMessage='Discard Changes'
+                            />
+                        }
+                        message={
+                            <FormattedMessage
+                                id='invitation-modal.discard-changes.message'
+                                defaultMessage='You have unsent invitations, are you sure you want to discard them?'
+                            />
+                        }
+                        confirmButtonText={
+                            <FormattedMessage
+                                id='invitation-modal.discard-changes.button'
+                                defaultMessage='Yes, Discard'
+                            />
+                        }
+                        modalClass='invitation-modal-confirm'
+                        onConfirm={this.confirmClose}
+                        onCancel={this.cancelConfirm}
+                    />
                     {this.state.step === STEPS_INITIAL &&
                         <InvitationModalInitialStep
                             teamName={this.props.currentTeam.display_name}
@@ -69,6 +114,7 @@ export default class InvitationModal extends React.Component {
                             goBack={this.goToInitialStep}
                             currentTeamId={this.props.currentTeam.id}
                             searchProfiles={this.props.actions.searchProfiles}
+                            onEdit={this.onEdit}
                         />
                     }
                     {this.state.step === STEPS_INVITE_GUESTS &&
@@ -77,6 +123,7 @@ export default class InvitationModal extends React.Component {
                             currentTeamId={this.props.currentTeam.id}
                             myInvitableChannels={this.props.invitableChannels}
                             sendGuestInvites={this.props.actions.sendGuestInvites}
+                            onEdit={this.onEdit}
                         />
                     }
                 </div>

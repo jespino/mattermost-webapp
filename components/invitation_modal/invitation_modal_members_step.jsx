@@ -5,6 +5,8 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
+import {isEmail} from 'mattermost-redux/utils/helpers';
+
 import FormattedMarkdownMessage from 'components/formatted_markdown_message';
 import InviteIcon from 'components/svg/invite_icon';
 import UsersEmailsInput from 'components/widgets/inputs/users_emails_input.jsx';
@@ -19,11 +21,34 @@ export default class InvitationModalMembersStep extends React.Component {
         goBack: PropTypes.func.isRequired,
         searchProfiles: PropTypes.func.isRequired,
         currentTeamId: PropTypes.string.isRequired,
+        onEdit: PropTypes.func.isRequired,
+    }
+
+    constructor(props) {
+        super(props);
+        this.state = {
+            emails: [],
+            users: [],
+        };
     }
 
     usersLoader = async (term) => {
         const {data} = await this.props.searchProfiles(term, this.props.currentTeamId);
         return data;
+    }
+
+    onChange = (usersAndEmails) => {
+        const users = [];
+        const emails = [];
+        for (const userOrEmail of usersAndEmails) {
+            if (isEmail(userOrEmail)) {
+                emails.push(userOrEmail);
+            } else {
+                users.push(userOrEmail);
+            }
+        }
+        this.setState({users, emails});
+        this.props.onEdit();
     }
 
     render() {
@@ -97,7 +122,7 @@ export default class InvitationModalMembersStep extends React.Component {
                                 <UsersEmailsInput
                                     usersLoader={this.usersLoader}
                                     placeholder={placeholder}
-                                    onChange={() => []}
+                                    onChange={this.onChange}
                                 />
                             )}
                         </FormattedMessage>

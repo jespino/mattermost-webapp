@@ -214,3 +214,36 @@
         }
     }
 }
+
+.app__body .modal.invitation-modal-confirm {
+    .modal-dialog {
+        width: 400px;
+    }
+    .modal-content {
+        border-radius: 8px;
+    }
+    .modal-header {
+        border-radius: 8px 8px 0 0;
+        background: $white;
+        border: 0px;
+        min-height: 64px;
+        padding: 20px;
+        .modal-title {
+            font-size: 20px;
+            color: $black;
+        }
+    }
+    .modal-body {
+        padding: 0 20px;
+    }
+    .modal-footer {
+        border-radius: 0 0 8px 8px;
+        border: 0px;
+        min-height: 80px;
+        padding: 20px;
+        button {
+            font-size: 15px;
+            font-weight: bold;
+        }
+    }
+}

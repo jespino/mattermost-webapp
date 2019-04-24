@@ -20,6 +20,7 @@ export default class InvitationModalGuestsStep extends React.Component {
         myInvitableChannels: PropTypes.array.isRequired,
         currentTeamId: PropTypes.string.isRequired,
         sendGuestInvites: PropTypes.func.isRequired,
+        onEdit: PropTypes.func.isRequired,
     }
 
     constructor(props) {
@@ -34,10 +35,17 @@ export default class InvitationModalGuestsStep extends React.Component {
 
     onEmailsChange = (emails) => {
         this.setState({emails});
+        this.props.onEdit();
     }
 
     onChannelsChange = (channels) => {
         this.setState({channels});
+        this.props.onEdit();
+    }
+
+    onMessageChange = (e) => {
+        this.setState({customMessage: e.target.value});
+        this.props.onEdit();
     }
 
     channelsLoader = async (value) => {
@@ -55,10 +63,6 @@ export default class InvitationModalGuestsStep extends React.Component {
 
     closeCustomMessage = () => {
         this.setState({customMessageOpen: false});
-    }
-
-    onMessageChange = (e) => {
-        this.setState({customMessage: e.target.value});
     }
 
     sendInvites = () => {
