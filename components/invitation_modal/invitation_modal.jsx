@@ -7,6 +7,7 @@ import {FormattedMessage} from 'react-intl';
 
 import FullScreenModal from 'components/widgets/modals/full_screen_modal';
 import ConfirmModal from 'components/confirm_modal.jsx';
+import RootPortal from 'components/root_portal';
 
 import InvitationModalInitialStep from './invitation_modal_initial_step.jsx';
 import InvitationModalMembersStep from './invitation_modal_members_step.jsx';
@@ -72,62 +73,64 @@ export default class InvitationModal extends React.Component {
 
     render() {
         return (
-            <FullScreenModal
-                show={Boolean(this.props.show)}
-                onClose={this.close}
-            >
-                <div className='InvitationModal'>
-                    <ConfirmModal
-                        show={this.state.confirmModal}
-                        title={
-                            <FormattedMessage
-                                id='invitation-modal.discard-changes.title'
-                                defaultMessage='Discard Changes'
+            <RootPortal>
+                <FullScreenModal
+                    show={Boolean(this.props.show)}
+                    onClose={this.close}
+                >
+                    <div className='InvitationModal'>
+                        <ConfirmModal
+                            show={this.state.confirmModal}
+                            title={
+                                <FormattedMessage
+                                    id='invitation-modal.discard-changes.title'
+                                    defaultMessage='Discard Changes'
+                                />
+                            }
+                            message={
+                                <FormattedMessage
+                                    id='invitation-modal.discard-changes.message'
+                                    defaultMessage='You have unsent invitations, are you sure you want to discard them?'
+                                />
+                            }
+                            confirmButtonText={
+                                <FormattedMessage
+                                    id='invitation-modal.discard-changes.button'
+                                    defaultMessage='Yes, Discard'
+                                />
+                            }
+                            modalClass='invitation-modal-confirm'
+                            onConfirm={this.confirmClose}
+                            onCancel={this.cancelConfirm}
+                        />
+                        {this.state.step === STEPS_INITIAL &&
+                            <InvitationModalInitialStep
+                                teamName={this.props.currentTeam.display_name}
+                                goToMembers={this.goToMembers}
+                                goToGuests={this.goToGuests}
                             />
                         }
-                        message={
-                            <FormattedMessage
-                                id='invitation-modal.discard-changes.message'
-                                defaultMessage='You have unsent invitations, are you sure you want to discard them?'
+                        {this.state.step === STEPS_INVITE_MEMBERS &&
+                            <InvitationModalMembersStep
+                                inviteId={this.props.currentTeam.invite_id}
+                                goBack={this.goToInitialStep}
+                                currentTeamId={this.props.currentTeam.id}
+                                searchProfiles={this.props.actions.searchProfiles}
+                                onEdit={this.onEdit}
                             />
                         }
-                        confirmButtonText={
-                            <FormattedMessage
-                                id='invitation-modal.discard-changes.button'
-                                defaultMessage='Yes, Discard'
+                        {this.state.step === STEPS_INVITE_GUESTS &&
+                            <InvitationModalGuestsStep
+                                goBack={this.goToInitialStep}
+                                currentTeamId={this.props.currentTeam.id}
+                                myInvitableChannels={this.props.invitableChannels}
+                                sendGuestInvites={this.props.actions.sendGuestInvites}
+                                onEdit={this.onEdit}
                             />
                         }
-                        modalClass='invitation-modal-confirm'
-                        onConfirm={this.confirmClose}
-                        onCancel={this.cancelConfirm}
-                    />
-                    {this.state.step === STEPS_INITIAL &&
-                        <InvitationModalInitialStep
-                            teamName={this.props.currentTeam.display_name}
-                            goToMembers={this.goToMembers}
-                            goToGuests={this.goToGuests}
-                        />
-                    }
-                    {this.state.step === STEPS_INVITE_MEMBERS &&
-                        <InvitationModalMembersStep
-                            inviteId={this.props.currentTeam.invite_id}
-                            goBack={this.goToInitialStep}
-                            currentTeamId={this.props.currentTeam.id}
-                            searchProfiles={this.props.actions.searchProfiles}
-                            onEdit={this.onEdit}
-                        />
-                    }
-                    {this.state.step === STEPS_INVITE_GUESTS &&
-                        <InvitationModalGuestsStep
-                            goBack={this.goToInitialStep}
-                            currentTeamId={this.props.currentTeam.id}
-                            myInvitableChannels={this.props.invitableChannels}
-                            sendGuestInvites={this.props.actions.sendGuestInvites}
-                            onEdit={this.onEdit}
-                        />
-                    }
-                </div>
-            </FullScreenModal>
+                    </div>
+                </FullScreenModal>
+            </RootPortal>
         );
     }
 }
