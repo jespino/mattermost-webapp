@@ -1,5 +1,7 @@
-.EmailsInput {
-    .emails-input__control {
+@import 'utils/variables';
+
+.UsersEmailsInput {
+    .users-emails-input__control {
         min-height: 48px;
         border-color: $gray;
         &:hover {
@@ -9,13 +11,13 @@
     input {
         height: inherit;
     }
-    .emails-input__menu {
+    .users-emails-input__menu {
         margin-top: 0px;
     }
-    .emails-input__menu-list{
+    .users-emails-input__menu-list{
         padding: 0px;
     }
-    .emails-input__menu-notice{
+    .users-emails-input__menu-notice{
         height: 60px;
         padding: 12px;
         display: flex;
@@ -23,7 +25,7 @@
         justify-content: center;
         border-radius: 4px 4px 0 0;
     }
-    .emails-input__option {
+    .users-emails-input__option {
         height: 60px;
         padding: 12px;
         display: flex;
@@ -44,15 +46,28 @@
                 margin: 3px;
             }
         }
+        .avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 18px;
+            display: inline-block;
+            margin-right: 3px;
+        }
     }
     .show {
         display: block;
     }
-    .emails-input__multi-value {
+    .users-emails-input__multi-value {
         align-items: center;
         background: $bg--gray;
         padding: 4px;
         border-radius: 16px;
+    }
+
+    .users-emails-input__multi-value__label {
+        display: flex;
+        align-items: center;
+        padding-left: 0px;
         .mail-icon {
             width: 24px;
             height: 24px;
@@ -65,8 +80,14 @@
                 fill: $white;
             }
         }
+        .avatar {
+            border-radius: 16px;
+            width: 24px;
+            height: 24px;
+            margin-right: 3px;
+        }
     }
-    .emails-input__multi-value__remove {
+    .users-emails-input__multi-value__remove {
         width: 16px;
         height: 16px;
         border-radius: 16px;

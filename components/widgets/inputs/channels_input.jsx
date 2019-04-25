@@ -10,6 +10,8 @@ import {Constants} from 'utils/constants';
 import PublicChannelIcon from 'components/svg/globe_icon.jsx';
 import PrivateChannelIcon from 'components/svg/lock_icon.jsx';
 
+import './channels_input.scss';
+
 export default class ChannelsInput extends React.Component {
     static propTypes = {
         placeholder: PropTypes.string,

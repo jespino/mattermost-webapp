@@ -13,6 +13,8 @@ import MailIcon from 'components/svg/mail_icon';
 import MailPlusIcon from 'components/svg/mail_plus_icon';
 import {imageURLForUser} from 'utils/utils.jsx';
 
+import './users_emails_input.scss';
+
 export default class UsersEmailsInput extends React.Component {
     static propTypes = {
         placeholder: PropTypes.string,

@@ -13,6 +13,8 @@ import FormattedMarkdownMessage from 'components/formatted_markdown_message';
 import MailIcon from 'components/svg/mail_icon';
 import MailPlusIcon from 'components/svg/mail_plus_icon';
 
+import './emails_input.scss';
+
 export default class EmailsInput extends React.Component {
     static propTypes = {
         placeholder: PropTypes.string,
