@@ -6,6 +6,8 @@ import React from 'react';
 
 import CloseIcon from 'components/svg/close_icon';
 
+import './full_screen_modal.scss';
+
 export default class FullScreenModal extends React.Component {
     static propTypes = {
         show: PropTypes.bool.isRequired,
