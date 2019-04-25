@@ -15,6 +15,20 @@ export default class FullScreenModal extends React.Component {
         onClose: PropTypes.func.isRequired,
     }
 
+    componentDidMount() {
+        document.addEventListener('keydown', this.handleKeypress);
+    }
+
+    componentWillUnmount() {
+        document.removeEventListener('keydown', this.handleKeypress);
+    }
+
+    handleKeypress = (e) => {
+        if (e.key === 'Escape' && this.props.show) {
+            this.close();
+        }
+    }
+
     close = () => {
         this.props.onClose();
     }
