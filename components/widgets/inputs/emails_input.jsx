@@ -19,18 +19,7 @@ export default class EmailsInput extends React.Component {
     static propTypes = {
         placeholder: PropTypes.string,
         onChange: PropTypes.func,
-    }
-
-    state = {
-        error: false,
-        inputValue: '',
-        isMenuOpen: false,
-    }
-
-    onInputChange = (inputValue, action) => {
-        if (action.action !== 'input-blur' && action.action !== 'menu-close') {
-            this.setState({inputValue, error: false, isMenuOpen: Boolean(inputValue)});
-        }
+        value: PropTypes.arrayOf(PropTypes.string),
     }
 
     getCreateLabel = (value) => (
@@ -78,21 +67,20 @@ export default class EmailsInput extends React.Component {
     }
 
     render() {
+        const values = this.props.value.map((v) => ({label: v, value: v}));
         return (
             <Creatable
                 styles={this.customStyles}
                 onChange={this.onChange}
                 isMulti={true}
-                menuIsOpen={this.state.isMenuOpen}
-                inputValue={this.state.inputValue}
                 isClearable={false}
                 isValidNewOption={isEmail}
-                onInputChange={this.onInputChange}
                 formatCreateLabel={this.getCreateLabel}
                 className='EmailsInput'
                 classNamePrefix='emails-input'
                 placeholder={this.props.placeholder}
                 components={this.components}
+                value={values}
             />
         );
     }

@@ -106,6 +106,7 @@ export default class InvitationModalGuestsStep extends React.Component {
                                 <EmailsInput
                                     placeholder={placeholder}
                                     onChange={this.onEmailsChange}
+                                    value={this.state.emails}
                                 />
                             )}
                         </FormattedMessage>
