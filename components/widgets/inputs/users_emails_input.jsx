@@ -5,6 +5,7 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import AsyncSelect from 'react-select/lib/AsyncCreatable';
 import {components} from 'react-select';
+import _ from 'lodash';
 
 import {isEmail} from 'mattermost-redux/utils/helpers';
 
@@ -20,24 +21,21 @@ export default class UsersEmailsInput extends React.Component {
         placeholder: PropTypes.string,
         usersLoader: PropTypes.func,
         onChange: PropTypes.func,
-    }
-
-    state = {
-        error: false,
-        inputValue: '',
-        isMenuOpen: false,
+        value: PropTypes.arrayOf(PropTypes.oneOfType([PropTypes.object, PropTypes.string])),
     }
 
     getOptionValue = (user) => {
         return user.id || user.value;
     }
 
-    usersLoader = async (term) => {
+    usersLoader = _.debounce((term, callback) => {
         if (isEmail(term)) {
-            return [];
+            callback([]);
         }
-        return this.props.usersLoader(term);
-    }
+        this.props.usersLoader(term).then((users) => {
+            callback(users);
+        });
+    }, 250, {maxWait: 1000})
 
     formatUserName = (user) => {
         let displayName = '@' + user.username + ' - ' + user.first_name + ' ' + user.last_name;
@@ -95,7 +93,12 @@ export default class UsersEmailsInput extends React.Component {
 
     onChange = (value) => {
         if (this.props.onChange) {
-            this.props.onChange(value.map((v) => v.id));
+            this.props.onChange(value.map((v) => {
+                if (v.id) {
+                    return v;
+                }
+                return v.value;
+            }));
         }
     }
 
@@ -112,13 +115,14 @@ export default class UsersEmailsInput extends React.Component {
     );
 
     NoOptionsMessage = (props) => {
-        if (this.state.inputValue) {
+        const inputValue = props.selectProps.inputValue;
+        if (inputValue) {
             return (
                 <div className='users-emails-input__option'>
                     <FormattedMarkdownMessage
                         id='widgets.emails_input.no_user_found_matching'
                         defaultMessage='No one found matching **{text}**, type email to invite'
-                        values={{text: this.state.inputValue}}
+                        values={{text: inputValue}}
                     >
                         {(message) => (
                             <components.NoOptionsMessage {...props}>
@@ -134,7 +138,7 @@ export default class UsersEmailsInput extends React.Component {
                 <FormattedMarkdownMessage
                     id='widgets.emails_input.no_user_found_empty'
                     defaultMessage='No one found outside this team, type email to invite'
-                    values={{text: this.state.inputValue}}
+                    values={{text: inputValue}}
                 >
                     {(message) => (
                         <components.NoOptionsMessage {...props}>
@@ -152,6 +156,12 @@ export default class UsersEmailsInput extends React.Component {
     };
 
     render() {
+        const values = this.props.value.map((v) => {
+            if (v.id) {
+                return v;
+            }
+            return {label: v, value: v};
+        });
         return (
             <AsyncSelect
                 styles={this.customStyles}
@@ -167,6 +177,7 @@ export default class UsersEmailsInput extends React.Component {
                 getOptionValue={this.getOptionValue}
                 formatOptionLabel={this.formatOptionLabel}
                 defaultOptions={true}
+                value={values}
             />
         );
     }

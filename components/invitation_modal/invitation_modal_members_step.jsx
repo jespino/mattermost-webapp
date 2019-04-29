@@ -5,8 +5,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import {FormattedMessage} from 'react-intl';
 
-import {isEmail} from 'mattermost-redux/utils/helpers';
-
 import FormattedMarkdownMessage from 'components/formatted_markdown_message';
 import InviteIcon from 'components/svg/invite_icon';
 import UsersEmailsInput from 'components/widgets/inputs/users_emails_input.jsx';
@@ -27,8 +25,7 @@ export default class InvitationModalMembersStep extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            emails: [],
-            users: [],
+            usersAndEmails: [],
         };
     }
 
@@ -38,16 +35,7 @@ export default class InvitationModalMembersStep extends React.Component {
     }
 
     onChange = (usersAndEmails) => {
-        const users = [];
-        const emails = [];
-        for (const userOrEmail of usersAndEmails) {
-            if (isEmail(userOrEmail)) {
-                emails.push(userOrEmail);
-            } else {
-                users.push(userOrEmail);
-            }
-        }
-        this.setState({users, emails});
+        this.setState({usersAndEmails});
         this.props.onEdit();
     }
 
@@ -123,6 +111,7 @@ export default class InvitationModalMembersStep extends React.Component {
                                     usersLoader={this.usersLoader}
                                     placeholder={placeholder}
                                     onChange={this.onChange}
+                                    value={this.state.usersAndEmails}
                                 />
                             )}
                         </FormattedMessage>
