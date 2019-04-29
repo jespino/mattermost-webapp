@@ -36,11 +36,12 @@ export default class FullScreenModal extends React.Component {
     render() {
         return (
             <div className={'FullScreenModal' + (this.props.show ? ' show' : '')}>
-                <CloseIcon
-                    className='close-x'
-                    onClick={this.close}
-                />
-                {this.props.children}
+                {this.props.show &&
+                    <CloseIcon
+                        className='close-x'
+                        onClick={this.close}
+                    />}
+                {this.props.show && this.props.children}
             </div>
         );
     }
