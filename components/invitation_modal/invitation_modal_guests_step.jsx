@@ -68,7 +68,7 @@ export default class InvitationModalGuestsStep extends React.Component {
     sendInvites = () => {
         this.props.sendGuestInvites(
             this.props.currentTeamId,
-            this.state.channels,
+            this.state.channels.map((c) => c.id),
             this.state.emails,
             this.state.customMessageOpen ? this.state.customMessage : '',
         );
@@ -135,6 +135,7 @@ export default class InvitationModalGuestsStep extends React.Component {
                                     placeholder={placeholder}
                                     channelsLoader={this.channelsLoader}
                                     onChange={this.onChannelsChange}
+                                    value={this.state.channels}
                                 />
                             )}
                         </FormattedMessage>

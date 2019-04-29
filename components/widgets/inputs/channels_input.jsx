@@ -17,11 +17,7 @@ export default class ChannelsInput extends React.Component {
         placeholder: PropTypes.string,
         channelsLoader: PropTypes.func,
         onChange: PropTypes.func,
-    }
-
-    state = {
-        error: false,
-        inputValue: '',
+        value: PropTypes.arrayOf(PropTypes.object),
     }
 
     components = {
@@ -44,7 +40,7 @@ export default class ChannelsInput extends React.Component {
 
     onChange = (value) => {
         if (this.props.onChange) {
-            this.props.onChange(value.map((v) => v.id));
+            this.props.onChange(value);
         }
     }
 
@@ -63,6 +59,7 @@ export default class ChannelsInput extends React.Component {
                 getOptionValue={this.getOptionValue}
                 formatOptionLabel={this.formatOptionLabel}
                 defaultOptions={true}
+                value={this.props.value}
             />
         );
     }
