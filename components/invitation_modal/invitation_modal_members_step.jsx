@@ -15,6 +15,7 @@ import BackIcon from 'components/svg/back_icon';
 
 import {getSiteURL} from 'utils/url.jsx';
 import debouncePromise from 'utils/debounce_promise.jsx';
+import {t} from 'utils/i18n.jsx';
 
 export default class InvitationModalMembersStep extends React.Component {
     static propTypes = {
@@ -119,6 +120,12 @@ export default class InvitationModalMembersStep extends React.Component {
                                     placeholder={placeholder}
                                     onChange={this.onChange}
                                     value={this.state.usersAndEmails}
+                                    validAddressMessageId={t('invitation_modal.members.users_emails_input.valid_email')}
+                                    validAddressMessageDefault='Invite **{email}** as a channel guest'
+                                    noOptionsMessageId={t('invitation_modal.members.users_emails_input.empty')}
+                                    noOptionsMessageDefault='No one found outside this team, type email to invite'
+                                    noMatchMessageId={t('invitation_modal.members.users_emails_input.no_user_found_matching')}
+                                    noMatchMessageDefault='No one found matching **{text}**, type email to invite'
                                 />
                             )}
                         </FormattedMessage>
