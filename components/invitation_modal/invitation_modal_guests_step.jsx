@@ -109,6 +109,10 @@ export default class InvitationModalGuestsStep extends React.Component {
                                     placeholder={placeholder}
                                     onChange={this.onEmailsChange}
                                     value={this.state.emails}
+                                    noOptionsMessageId={t('invitation_modal.guests.emails_input.invalid_email')}
+                                    noOptionsMessageDefault='Type a valid email address to invite new people'
+                                    validAddressMessageId={t('invitation_modal.guests.emails_input.valid_email')}
+                                    validAddressMessageDefault='Invite **{email}** as a channel guest'
                                 />
                             )}
                         </FormattedMessage>
