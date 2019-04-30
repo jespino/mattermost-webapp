@@ -14,6 +14,8 @@ import ChannelsInput from 'components/widgets/inputs/channels_input.jsx';
 
 import BackIcon from 'components/svg/back_icon';
 
+import {t} from 'utils/i18n.jsx';
+
 export default class InvitationModalGuestsStep extends React.Component {
     static propTypes = {
         goBack: PropTypes.func.isRequired,
