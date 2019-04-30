@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 import React from 'react';
 import AsyncSelect from 'react-select/lib/AsyncCreatable';
 import {components} from 'react-select';
-import _ from 'lodash';
 
 import {isEmail} from 'mattermost-redux/utils/helpers';
 
@@ -27,15 +26,6 @@ export default class UsersEmailsInput extends React.Component {
     getOptionValue = (user) => {
         return user.id || user.value;
     }
-
-    usersLoader = _.debounce((term, callback) => {
-        if (isEmail(term)) {
-            callback([]);
-        }
-        this.props.usersLoader(term).then((users) => {
-            callback(users);
-        });
-    }, 250, {maxWait: 1000})
 
     formatUserName = (user) => {
         let displayName = '@' + user.username + ' - ' + user.first_name + ' ' + user.last_name;
@@ -166,7 +156,7 @@ export default class UsersEmailsInput extends React.Component {
             <AsyncSelect
                 styles={this.customStyles}
                 onChange={this.onChange}
-                loadOptions={this.usersLoader}
+                loadOptions={this.props.usersLoader}
                 isValidNewOption={isEmail}
                 isMulti={true}
                 isClearable={false}
