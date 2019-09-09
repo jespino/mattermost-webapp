@@ -1,22 +1,20 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import PropTypes from 'prop-types';
 import React from 'react';
 import {intlShape} from 'react-intl';
 
-export default class BackstageHeader extends React.Component {
-    static get propTypes() {
-        return {
-            children: PropTypes.node,
-        };
-    }
-    static contextTypes = {
+type Props = {
+    children: React.ReactNode;
+};
+
+export default class BackstageHeader extends React.Component<Props> {
+    public static contextTypes = {
         intl: intlShape.isRequired,
     };
 
-    render() {
-        const children = [];
+    public render() {
+        const children: React.ReactNode[] = [];
         const {formatMessage} = this.context.intl;
 
         React.Children.forEach(this.props.children, (child, index) => {

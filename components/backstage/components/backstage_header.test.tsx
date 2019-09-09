@@ -4,7 +4,7 @@
 import React from 'react';
 
 import {shallowWithIntl} from 'tests/helpers/intl-test-helper.jsx';
-import BackstageHeader from 'components/backstage/components/backstage_header.jsx';
+import BackstageHeader from 'components/backstage/components/backstage_header';
 
 describe('components/backstage/components/BackstageHeader', () => {
     test('should match snapshot without children', () => {

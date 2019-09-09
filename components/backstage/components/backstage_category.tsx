@@ -1,35 +1,28 @@
 // Copyright (c) 2015-present Mattermost, Inc. All Rights Reserved.
 // See LICENSE.txt for license information.
 
-import PropTypes from 'prop-types';
 import React from 'react';
 import {Route, NavLink} from 'react-router-dom';
 
-export default class BackstageCategory extends React.Component {
-    static get propTypes() {
-        return {
-            name: PropTypes.string.isRequired,
-            title: PropTypes.node.isRequired,
-            icon: PropTypes.string.isRequired,
-            parentLink: PropTypes.string,
-            children: PropTypes.arrayOf(PropTypes.element),
-        };
+type Props = {
+    name: string;
+    title: React.ReactNode;
+    icon: string;
+    parentLink?: string;
+    children: React.ReactElement[];
+};
+
+export default class BackstageCategory extends React.Component<Props> {
+    public static defaultProps = {
+        parentLink: '',
+        children: [],
     }
 
-    static get defaultProps() {
-        return {
-            parentLink: '',
-            children: [],
-        };
-    }
+    public static contextTypes = {
+        router: PropTypes.object.isRequired,
+    };
 
-    static get contextTypes() {
-        return {
-            router: PropTypes.object.isRequired,
-        };
-    }
-
-    render() {
+    public render() {
         const {name, title, icon, parentLink, children} = this.props;
 
         const link = parentLink + '/' + name;
@@ -53,7 +46,7 @@ export default class BackstageCategory extends React.Component {
                         render={() => (
                             <ul className='sections'>
                                 {
-                                    React.Children.map(children, (child) => {
+                                    React.Children.map(children, (child: React.ReactElement): React.ReactElement => {
                                         if (!child) {
                                             return child;
                                         }
