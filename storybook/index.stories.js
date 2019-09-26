@@ -6,6 +6,7 @@ import {Provider} from 'react-redux';
 import {Router} from 'react-router-dom';
 
 import {addDecorator} from '@storybook/react';
+import {withA11y} from '@storybook/addon-a11y';
 
 import IntlProvider from 'components/intl_provider';
 
@@ -31,3 +32,5 @@ addDecorator((storyFn) => (
         </IntlProvider>
     </Provider>
 ));
+
+addDecorator(withA11y);
